@@ -7,7 +7,7 @@ import FeaturedPost from './components/FeaturedPost';
 import type { FrontendPost } from './types/PostType';
 
 
-const VITE_APP_BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL
+const VITE_APP_BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
 const getFeaturePostsAPI = () => {
   return axios.get(`${VITE_APP_BACKEND_URL}/posts/featured`)
