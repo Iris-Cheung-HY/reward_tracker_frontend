@@ -1,13 +1,17 @@
 .featured-container {
-  width: 400px; height: 400px; 
-  margin: 30px auto; overflow: hidden;
+  width: 80vw;         
+  max-width: 800px;     
+  height: 400px;      
+  margin: 30px auto;
+  overflow: hidden;
   padding: 0;
 }
+
 .images-wrapper {
   width: 1200px; animation: move 20s infinite;
 }
 .featured-image {
-  width: 400px; height: 400px; float: left;
+  width: 1200px; height: 400px; float: left;
 }
 @keyframes move {
   0%, 30% { margin-left: 0px; }

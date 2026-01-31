@@ -91,30 +91,39 @@ const App: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="feature-post-session">
-        <h1>Featured Posts</h1>
-        <FeaturedPost posts = {featuredPosts}/>
-      </div>
-      <div className="travel-post-container">
-        <h1>Travel</h1>
-        <button>+</button>
-        {travelPosts.map((post) => (
-          <div key={post.id}>
-            <ul>{post.title}</ul>
-          </div>
-        ))}
-      </div>
+      <div className="all-session">
+        <div className="feature-post-session">
+          <h1>Featured Posts</h1>
+          <FeaturedPost posts = {featuredPosts}/>
+        </div>
+      <div className="sub-session">
+        <div className="travel-post-container">
+          <h1>Travel</h1>
+          <button>+</button>
+          {travelPosts.map((post) => (
+            <div key={post.id}>
+              <ul>{post.title}</ul>
+            </div>
+          ))}
+        </div>
 
-      <div className="credit-card-post-container">
-        <h1>Credit Card</h1>
-        <button>+</button>
-        {creditCardPosts.map((post) => (
-          <div key={post.id}>
-            <ul>{post.title}</ul>
-          </div>
-        ))}
+        <div className="credit-card-post-container">
+          <h1>Credit Card</h1>
+          <button>+</button>
+          {creditCardPosts.map((post) => (
+            <div key={post.id}>
+              <ul>{post.title}</ul>
+            </div>
+          ))}
+        </div>
+        
+        
+      
+      
+      
+      
+      </div>     
       </div>
-
     </>
   )
   };
