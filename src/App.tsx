@@ -8,15 +8,13 @@ import type { FrontendPost } from './types/PostType';
 
 const VITE_APP_BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
-// 優化 API 請求：統一處理 response
 const fetchPosts = async (endpoint: string) => {
   try {
     const response = await axios.get(`${VITE_APP_BACKEND_URL}${endpoint}`);
-    // 檢查 content 是否存在，避免 map 報錯
     return response.data.content || [];
   } catch (error) {
     console.error(`Error fetching from ${endpoint}:`, error);
-    return []; // 失敗時回傳空陣列，防止前端崩潰
+    return [];
   }
 };
 
@@ -24,13 +22,12 @@ const App: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<FrontendPost[]>([]);
   const [travelPosts, setTravelPosts] = useState<FrontendPost[]>([]);
   const [creditCardPosts, setCreditCardPosts] = useState<FrontendPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // 新增：加載狀態
-
+  const [isLoading, setIsLoading] = useState(true);
+  
   useEffect(() => {
     const loadAllData = async () => {
       setIsLoading(true);
       
-      // 平行執行所有請求，效率更高
       const [featured, travel, credit] = await Promise.all([
         fetchPosts('/posts/featured'),
         fetchPosts('/posts/travel-preview'),

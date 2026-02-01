@@ -2,7 +2,6 @@ import { useState } from 'react';
 import axios from 'axios';
 import './NewUserForm.css';
 
-// 取得環境變數
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 type NewUserFormData = {
@@ -32,10 +31,8 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onFormSubmit }) => {
     const checkUsername = async (username: string) => {
         if (username.length < 3) return;
         try {
-            // 修正 1: 使用 backendUrl 變數，並確保後端有這個路徑
             const res = await axios.post(`${backendUrl}/users/check-username`, { username });
             
-            // 假設後端回傳格式為 { available: true/false }
             setUsernameAvailable(res.data.available);
             
             if (res.data.available === false) {
@@ -47,7 +44,6 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onFormSubmit }) => {
             }
         } catch (error) {
             console.error("Username check failed:", error);
-            // 容錯處理：如果後端接口還沒寫好，我們先預設可用，避免使用者無法註冊
             setUsernameAvailable(true); 
             setDisableSubmit(false);
         }
@@ -61,7 +57,6 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onFormSubmit }) => {
             [name]: value
         }));
 
-        // 簡單的必填檢查
         if (value.trim() === '') {
             setErrMsg(`${name} cannot be empty!`);
             setDisableSubmit(true);

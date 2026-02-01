@@ -5,7 +5,6 @@ import axios from "axios";
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
-// --- 型別定義 ---
 type NewUserFormData = {
     username: string;
     password: string;
@@ -26,8 +25,6 @@ interface User {
 
 export default function Navbar() {
     console.log("Current Backend URL:", backendUrl);
-    // 修正：加上 <User | null> 讓 TypeScript 知道 user 的結構
-    // 加上函數初始化，從 localStorage 讀取已登入的使用者
     const [user, setUser] = useState<User | null>(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
@@ -56,7 +53,6 @@ export default function Navbar() {
         try {
             const response = await axios.post(`${backendUrl}/users/login`, formData);
             
-            // 關鍵檢查：確保後端真的有回傳使用者資料
             if (response.data && response.data.username) {
                 const loginUser = response.data;
                 setUser(loginUser);
@@ -64,16 +60,13 @@ export default function Navbar() {
                 alert(`Welcome Back, ${loginUser.username}!`);
                 setSignUpLoginModal(false);
             } else {
-                // 如果後端回傳空值或錯誤
                 alert("Login failed: Invalid username or password");
             }
         } catch (error: any) {
-            // 當後端回傳 401 或 500 時會跳到這裡
             alert("Login failed: Wrong credentials or server error");
         }
     };
 
-    // 登出功能（選配，建議加上）
     const handleLogout = () => {
         setUser(null);
         localStorage.removeItem('user');
@@ -107,7 +100,7 @@ export default function Navbar() {
                             className="btn btn-outline-primary"
                             onClick={() => setSignUpLoginModal(true)}
                         >
-                            {/* 這裡現在不會有紅線了 */}
+
                             {user ? `Hi, ${user.username}` : "Sign Up / Log In"}
                         </button>
                     </div>
@@ -118,7 +111,7 @@ export default function Navbar() {
                 <SignUpLoginModal
                     onSignupSubmit={handleSignup}
                     onSigninSubmit={handleSignin}
-                    onClose={() => setSignUpLoginModal(false)} // 傳入關閉邏輯
+                    onClose={() => setSignUpLoginModal(false)}
                 />
             )}
         </>
