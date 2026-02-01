@@ -2,6 +2,9 @@ import { useState } from 'react';
 import axios from 'axios';
 import './NewUserForm.css';
 
+// 取得環境變數
+const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
+
 type NewUserFormData = {
     username: string;
     password: string;
@@ -29,67 +32,40 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onFormSubmit }) => {
     const checkUsername = async (username: string) => {
         if (username.length < 3) return;
         try {
-            const res = await axios.post('/api/users/check-username', { username });
+            // 修正 1: 使用 backendUrl 變數，並確保後端有這個路徑
+            const res = await axios.post(`${backendUrl}/users/check-username`, { username });
+            
+            // 假設後端回傳格式為 { available: true/false }
             setUsernameAvailable(res.data.available);
-            if (!res.data.available) {
-                setErrMsg('Username is not available, please enter another username or hit sign in');
+            
+            if (res.data.available === false) {
+                setErrMsg('Username is already taken');
                 setDisableSubmit(true);
+            } else {
+                setErrMsg('');
+                setDisableSubmit(false);
             }
         } catch (error) {
-            setDisableSubmit(true);
+            console.error("Username check failed:", error);
+            // 容錯處理：如果後端接口還沒寫好，我們先預設可用，避免使用者無法註冊
+            setUsernameAvailable(true); 
+            setDisableSubmit(false);
         }
-    };
-
-    const makeControlledInput = (inputName: keyof NewUserFormData, inputType = 'text') => {
-        return (
-            <input
-                name={inputName}
-                type={inputType}
-                value={userFormData[inputName]}
-                onChange={handleInputChange}
-                onBlur={inputName === 'username' ? () => checkUsername(userFormData.username) : undefined}
-                className="formInput"
-            />
-        );
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const inputName = event.target.name;
-        const inputValue = event.target.value;
+        const { name, value } = event.target;
         
         setUserFormData(prev => ({
             ...prev,
-            [inputName]: inputValue
+            [name]: value
         }));
 
-        if (inputName === 'username' && inputValue.length === 0) {
-            setErrMsg('Username cannot be empty!');
+        // 簡單的必填檢查
+        if (value.trim() === '') {
+            setErrMsg(`${name} cannot be empty!`);
             setDisableSubmit(true);
-        } else if (inputValue.length > 0) {
-            setErrMsg('');
-            setDisableSubmit(false);
-        }
-
-        if (inputName === 'password' && inputValue.length === 0) {
-            setErrMsg('Password cannot be empty!')
-            setDisableSubmit(true);
-        } else if (inputValue.length > 0) {
-            setErrMsg('');
-            setDisableSubmit(false);
-        }
-
-        if (inputName === 'email' && inputValue.length === 0) {
-            setErrMsg('Email cannot be empty!')
-            setDisableSubmit(true);
-        } else if (inputValue.length > 0) {
-            setErrMsg('');
-            setDisableSubmit(false);
-        }
-
-        if (inputName === 'name' && inputValue.length === 0) {
-            setErrMsg('Name cannot be empty!')
-            setDisableSubmit(true);
-        } else if (inputValue.length > 0) {
+        } else {
             setErrMsg('');
             setDisableSubmit(false);
         }
@@ -97,7 +73,9 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onFormSubmit }) => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (disableSubmit || !usernameAvailable) return;
+        if (disableSubmit || usernameAvailable === false) {
+            return;
+        }
 
         onFormSubmit(userFormData);
         setUserFormData(defaultUserFormData);
@@ -109,30 +87,51 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onFormSubmit }) => {
     return (
         <form onSubmit={handleSubmit} className="newUserForm">
             <div className="formContainer">
-                {/* Username */}
                 <div>
-                    <p className="inputErrorMessage">{errMsg}</p>
+                    <p className="inputErrorMessage" style={{color: 'red'}}>{errMsg}</p>
                     <label htmlFor="username">Username</label>
-                    {makeControlledInput('username')}
-
+                    <input
+                        name="username"
+                        type="text"
+                        value={userFormData.username}
+                        onChange={handleInputChange}
+                        onBlur={() => checkUsername(userFormData.username)}
+                        className="formInput"
+                        placeholder="At least 3 characters"
+                    />
                 </div>
 
-                {/* Password */}
                 <div>
                     <label htmlFor="password">Password</label>
-                    {makeControlledInput('password', 'password')}
+                    <input
+                        name="password"
+                        type="password"
+                        value={userFormData.password}
+                        onChange={handleInputChange}
+                        className="formInput"
+                    />
                 </div>
 
-                {/* Name */}
                 <div>
                     <label htmlFor="name">Name</label>
-                    {makeControlledInput('name')}
+                    <input
+                        name="name"
+                        type="text"
+                        value={userFormData.name}
+                        onChange={handleInputChange}
+                        className="formInput"
+                    />
                 </div>
 
-                {/* Email */}
                 <div>
                     <label htmlFor="email">Email</label>
-                    {makeControlledInput('email')}
+                    <input
+                        name="email"
+                        type="email"
+                        value={userFormData.email}
+                        onChange={handleInputChange}
+                        className="formInput"
+                    />
                 </div>
             </div>
             

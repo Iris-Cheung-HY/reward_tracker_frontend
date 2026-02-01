@@ -6,127 +6,90 @@ import axios from 'axios';
 import FeaturedPost from './components/FeaturedPost';
 import type { FrontendPost } from './types/PostType';
 
-
 const VITE_APP_BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
 
-const getFeaturePostsAPI = () => {
-  return axios.get(`${VITE_APP_BACKEND_URL}/posts/featured`)
-  .then(response => response.data)
-  .catch(error => console.log(error));
+// 優化 API 請求：統一處理 response
+const fetchPosts = async (endpoint: string) => {
+  try {
+    const response = await axios.get(`${VITE_APP_BACKEND_URL}${endpoint}`);
+    // 檢查 content 是否存在，避免 map 報錯
+    return response.data.content || [];
+  } catch (error) {
+    console.error(`Error fetching from ${endpoint}:`, error);
+    return []; // 失敗時回傳空陣列，防止前端崩潰
   }
-
-const convertFeaturePostsFromAPI = (apiPost: FrontendPost) => {
-  const newPost = {
-    ...apiPost,
-  };
-  return newPost;
-}
-
-const getTravelCategoryPreviewPostsAPI = () => {
-  return axios.get(`${VITE_APP_BACKEND_URL}/posts/travel-preview`)
-  .then(response => response.data)
-  .catch(error => console.log(error))
-}
-
-const convertTravelCategoryPreviewPostsAPI = (apiPost: FrontendPost) => {
-  const newTravelCatPosts = {
-    ...apiPost,
-  };
-  return newTravelCatPosts;
-}
-
-const getCreditCardCategoryPreviewPostsAPI = () => {
-  return axios.get(`${VITE_APP_BACKEND_URL}/posts/creditcard-preview`)
-  .then(response => response.data)
-  .catch(error => console.log(error))
-}
-
-const convertCreditCardCategoryPreviewPostsAPI = (apiPost: FrontendPost) => {
-  const newCreditCardCatPosts = {
-    ...apiPost,
-  };
-  return newCreditCardCatPosts;
-}
-
+};
 
 const App: React.FC = () => {
-
   const [featuredPosts, setFeaturedPosts] = useState<FrontendPost[]>([]);
   const [travelPosts, setTravelPosts] = useState<FrontendPost[]>([]);
   const [creditCardPosts, setCreditCardPosts] = useState<FrontendPost[]>([]);
-
-  const getFirstThreeFeaturedPosts = () => {
-    return getFeaturePostsAPI()
-      .then(response => {
-        const newPosts = response.content.map(convertFeaturePostsFromAPI);
-        setFeaturedPosts(newPosts);
-      });
-  };
-
-  const getTravelCatPosts = () => {
-    return getTravelCategoryPreviewPostsAPI()
-      .then(response => {
-        const newTravelPosts = response.content.map(convertTravelCategoryPreviewPostsAPI);
-        setTravelPosts(newTravelPosts);
-      })
-  }
-
-  const getCreditCardPosts = () => {
-    return getCreditCardCategoryPreviewPostsAPI()
-      .then(response => {
-        const newCreditCardPosts = response.content.map(convertCreditCardCategoryPreviewPostsAPI);
-        setCreditCardPosts(newCreditCardPosts)
-
-      })
-  }
-
+  const [isLoading, setIsLoading] = useState(true); // 新增：加載狀態
 
   useEffect(() => {
-    getFirstThreeFeaturedPosts();
-    getTravelCatPosts();
-    getCreditCardPosts();
+    const loadAllData = async () => {
+      setIsLoading(true);
+      
+      // 平行執行所有請求，效率更高
+      const [featured, travel, credit] = await Promise.all([
+        fetchPosts('/posts/featured'),
+        fetchPosts('/posts/travel-preview'),
+        fetchPosts('/posts/creditcard-preview')
+      ]);
 
-  },[]);
+      setFeaturedPosts(featured);
+      setTravelPosts(travel);
+      setCreditCardPosts(credit);
+      
+      setIsLoading(false);
+    };
+
+    loadAllData();
+  }, []);
 
   return (
     <>
       <Navbar />
       <div className="all-session">
-        <div className="feature-post-session">
-          <h1>Featured Posts</h1>
-          <FeaturedPost posts = {featuredPosts}/>
-        </div>
-      <div className="sub-session">
-        <div className="travel-post-container">
-          <h1>Travel</h1>
-          <button>+</button>
-          {travelPosts.map((post) => (
-            <div key={post.id}>
-              <ul>{post.title}</ul>
+        {isLoading ? (
+          <div className="text-center mt-5">Loading posts...</div>
+        ) : (
+          <>
+            <div className="feature-post-session">
+              <h1>Featured Posts</h1>
+              <FeaturedPost posts={featuredPosts} />
             </div>
-          ))}
-        </div>
+            
+            <div className="sub-session">
+              <div className="travel-post-container">
+                <h1>Travel</h1>
+                <button>+</button>
+                {travelPosts.length > 0 ? (
+                  travelPosts.map((post) => (
+                    <div key={post.id}>
+                      <ul>{post.title}</ul>
+                    </div>
+                  ))
+                ) : <p>No travel posts found.</p>}
+              </div>
 
-        <div className="credit-card-post-container">
-          <h1>Credit Card</h1>
-          <button>+</button>
-          {creditCardPosts.map((post) => (
-            <div key={post.id}>
-              <ul>{post.title}</ul>
+              <div className="credit-card-post-container">
+                <h1>Credit Card</h1>
+                <button>+</button>
+                {creditCardPosts.length > 0 ? (
+                  creditCardPosts.map((post) => (
+                    <div key={post.id}>
+                      <ul>{post.title}</ul>
+                    </div>
+                  ))
+                ) : <p>No credit card posts found.</p>}
+              </div>
             </div>
-          ))}
-        </div>
-        
-        
-      
-      
-      
-      
-      </div>     
+          </>
+        )}
       </div>
     </>
-  )
-  };
+  );
+};
 
-
-export default App
+export default App;
