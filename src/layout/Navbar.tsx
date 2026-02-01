@@ -24,7 +24,6 @@ interface User {
 }
 
 export default function Navbar() {
-    console.log("Current Backend URL:", backendUrl);
     const [user, setUser] = useState<User | null>(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
