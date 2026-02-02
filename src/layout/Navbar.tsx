@@ -72,43 +72,49 @@ export default function Navbar() {
         alert("Logged out successfully");
     };
 
+
 return (
-    <nav className="fixed-top">
-        <div className="nav-container">
-            <a className="nav-logo" href="/">Reward Tracker</a>
-            
-            <div className="nav-content">
-                <ul className="nav-links">
-                    {user && (
-                        <>
-                            <li><a href="/forum">Forum</a></li>
-                            <li><a href="/summary">My Wallet</a></li>
-                        </>
-                    )}
-                </ul>
+        <>
+            <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow-sm">
+                <div className="container-fluid">
+                    <span className="navbar-brand mb-0 h1">Reward Tracker</span>
 
-                <div className="nav-auth">
-                    {user ? (
-                        <>
-                            <span className="user-name">Hi, {user.username}</span>
-                            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-                        </>
-                    ) : (
-                        <button className="login-btn" onClick={() => setSignUpLoginModal(true)}>
-                            Sign Up / Log In
-                        </button>
-                    )}
+                    <div className="d-flex align-items-center ms-auto">
+                        {user ? (
+                            <div className="d-flex align-items-center gap-4">
+                                <a className="nav-link fw-semibold" href="/">Forum</a>
+                                <a className="nav-link fw-semibold" href="/summary">My Wallet</a>
+                                
+                                <div className="d-flex align-items-center ms-2 border-start ps-4">
+                                    <span className="text-secondary me-3">Hi, {user.username}</span>
+                                    <button 
+                                        className="btn btn-sm btn-outline-danger" 
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <button 
+                                className="btn btn-primary px-4"
+                                onClick={() => setSignUpLoginModal(true)}
+                            >
+                                Sign Up / Log In
+                            </button>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </div>
+            </nav>
 
-        {showSignUpLoginModal && (
-            <SignUpLoginModal
-                onSignupSubmit={handleSignup}
-                onSigninSubmit={handleSignin}
-                onClose={() => setSignUpLoginModal(false)}
-            />
-        )}
-    </nav>
-);
+            {showSignUpLoginModal && (
+                <SignUpLoginModal
+                    onSignupSubmit={handleSignup}
+                    onSigninSubmit={handleSignin}
+                    onClose={() => setSignUpLoginModal(false)}
+                />
+            )}
+        </>
+    );
 }
+
