@@ -73,7 +73,7 @@ export default function Navbar() {
     };
 
 return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+    <nav className="fixed-top">
         <div className="nav-container">
             <a className="nav-logo" href="/">Reward Tracker</a>
             
@@ -81,13 +81,13 @@ return (
                 <ul className="nav-links">
                     {user && (
                         <>
-                            <li><a href="/summary">My Wallet</a></li>
                             <li><a href="/forum">Forum</a></li>
+                            <li><a href="/summary">My Wallet</a></li>
                         </>
                     )}
                 </ul>
 
-                <div className="nav-user">
+                <div className="nav-auth">
                     {user ? (
                         <>
                             <span className="user-name">Hi, {user.username}</span>
