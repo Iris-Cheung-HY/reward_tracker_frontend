@@ -72,47 +72,52 @@ export default function Navbar() {
         alert("Logged out successfully");
     };
 
-    return (
-        <>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="#">Reward Tracker</a>
-                    <button 
-                        className="navbar-toggler" 
-                        type="button" 
-                        data-bs-toggle="collapse" 
-                        data-bs-target="#navbarSupportedContent"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    
-                    <div className="d-flex align-items-center">
-                        {user && (
-                            <button 
-                                className="btn btn-sm btn-link text-decoration-none me-2"
-                                onClick={handleLogout}
-                            >
-                                Logout
-                            </button>
-                        )}
-                        <button 
-                            className="btn btn-outline-primary"
-                            onClick={() => setSignUpLoginModal(true)}
-                        >
-
-                            {user ? `Hi, ${user.username}` : "Sign Up / Log In"}
-                        </button>
-                    </div>
-                </div>
-            </nav>
+  return (
+    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow-sm">
+        <div className="container-fluid">
+            <a className="navbar-brand fw-bold" href="/">Reward Tracker</a>
             
-            {showSignUpLoginModal && (
-                <SignUpLoginModal
-                    onSignupSubmit={handleSignup}
-                    onSigninSubmit={handleSignin}
-                    onClose={() => setSignUpLoginModal(false)}
-                />
-            )}
-        </>
-    );
+            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span className="navbar-toggler-icon"></span>
+            </button>
+
+            <div className="collapse navbar-collapse" id="navContent">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li className="nav-item"><a className="nav-link" href="/forum">Forum</a></li>
+                    {user && (
+                        <>
+                            <li className="nav-item"><a className="nav-link" href="/summary">My Wallet</a></li>
+                            <li className="nav-item"><a className="nav-link" href="/dashboard">Insights</a></li>
+                        </>
+                    )}
+                </ul>
+
+                <div className="d-flex align-items-center gap-2">
+                    {user ? (
+                        <div className="dropdown">
+                            <button className="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Hi, {user.username}
+                            </button>
+                            <ul className="dropdown-menu dropdown-menu-end">
+                                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
+                            </ul>
+                        </div>
+                    ) : (
+                        <button className="btn btn-primary" onClick={() => setSignUpLoginModal(true)}>
+                            Sign Up / Log In
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+
+        {showSignUpLoginModal && (
+            <SignUpLoginModal
+                onSignupSubmit={handleSignup}
+                onSigninSubmit={handleSignin}
+                onClose={() => setSignUpLoginModal(false)}
+            />
+        )}
+    </nav>
+);
 }
