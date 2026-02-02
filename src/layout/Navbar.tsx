@@ -72,38 +72,29 @@ export default function Navbar() {
         alert("Logged out successfully");
     };
 
-  return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow-sm">
-        <div className="container-fluid">
-            <a className="navbar-brand fw-bold" href="/">Reward Tracker</a>
+return (
+    <nav className="custom-navbar">
+        <div className="nav-container">
+            <a className="nav-logo" href="/">Reward Tracker</a>
             
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-
-            <div className="collapse navbar-collapse" id="navContent">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li className="nav-item"><a className="nav-link" href="/forum">Forum</a></li>
+            <div className="nav-content">
+                <ul className="nav-links">
+                    <li><a href="/forum">Forum</a></li>
                     {user && (
                         <>
-                            <li className="nav-item"><a className="nav-link" href="/summary">My Wallet</a></li>
-                            <li className="nav-item"><a className="nav-link" href="/dashboard">Insights</a></li>
+                            <li><a href="/summary">My Wallet</a></li>
                         </>
                     )}
                 </ul>
 
-                <div className="d-flex align-items-center gap-2">
+                <div className="nav-user">
                     {user ? (
-                        <div className="dropdown">
-                            <button className="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                Hi, {user.username}
-                            </button>
-                            <ul className="dropdown-menu dropdown-menu-end">
-                                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
-                            </ul>
-                        </div>
+                        <>
+                            <span className="user-name">Hi, {user.username}</span>
+                            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                        </>
                     ) : (
-                        <button className="btn btn-primary" onClick={() => setSignUpLoginModal(true)}>
+                        <button className="login-btn" onClick={() => setSignUpLoginModal(true)}>
                             Sign Up / Log In
                         </button>
                     )}
