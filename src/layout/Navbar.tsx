@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import './Navbar.css';
 import SignUpLoginModal from '../components/SignUpLoginModal';
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -18,12 +19,14 @@ type LoginFormData = {
 }
 
 interface User {
-    userId: number;
+    id: number;
     username: string;
     token?: string; 
 }
 
 export default function Navbar() {
+    const navigate = useNavigate();
+
     const [user, setUser] = useState<User | null>(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
@@ -58,6 +61,8 @@ export default function Navbar() {
                 localStorage.setItem('user', JSON.stringify(loginUser));
                 alert(`Welcome Back, ${loginUser.username}!`);
                 setSignUpLoginModal(false);
+
+                navigate("/summary");
             } else {
                 alert("Login failed: Invalid username or password");
             }
@@ -70,6 +75,7 @@ export default function Navbar() {
         setUser(null);
         localStorage.removeItem('user');
         alert("Logged out successfully");
+        navigate("/");
     };
 
 
@@ -82,8 +88,8 @@ return (
                     <div className="d-flex align-items-center ms-auto">
                         {user ? (
                             <div className="d-flex align-items-center gap-4">
-                                <a className="nav-link fw-semibold" href="/">Forum</a>
-                                <a className="nav-link fw-semibold" href="/summary">My Wallet</a>
+                                <Link className="nav-link fw-semibold" to="/">Forum</Link>
+                                <Link className="nav-link fw-semibold" to="/summary">My Wallet</Link>
                                 
                                 <div className="d-flex align-items-center ms-2 border-start ps-4">
                                     <span className="text-secondary me-3">Hi, {user.username}</span>
