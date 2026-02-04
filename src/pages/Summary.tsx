@@ -33,6 +33,7 @@ const Summary: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchUserCards = async () => {
+        console.log("Checking localStorage for user...");
         try {
             const storedUser = localStorage.getItem('user');
             if (!storedUser) return;
