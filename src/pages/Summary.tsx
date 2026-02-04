@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Summary.css';
-import AnnualFeeTotal from './AnnualFeeTotal';
-import SummaryTransaction from './SummaryTransaction';
-import NewCardForm from './NewCardForm';
-import CardList from './CardList';
+import AnnualFeeTotal from '../components/AnnualFeeTotal';
+import SummaryTransaction from '../components/SummaryTransaction';
+import NewCardForm from '../components/NewCardForm';
+import CardList from '../components/CardList';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 

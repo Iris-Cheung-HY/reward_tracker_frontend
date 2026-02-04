@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BankCreditCardDTO } from '../types';;
+
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
+
 
 type NewCardFormData = {
     lastFourDigits: string;
@@ -22,7 +23,6 @@ interface BankCreditCardDTO {
     cardName: string;
     cardType: string;
 }
-
 
 
 const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
