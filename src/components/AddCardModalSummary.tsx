@@ -3,56 +3,26 @@ import './AddCardModalSummary.css';
 import NewCardForm from './NewCardForm';
 
 
-type SignUpLoginModalProps = {
-    onSignupSubmit: (data: any) => void;
-    onSigninSubmit: (data: any) => void;
+type AddCardModalProps = {
+    onAddCardSubmit: (data: any) => void;
     onClose: () => void;
 };
 
-const SignUpLoginModal: React.FC<SignUpLoginModalProps> = ({ 
-    onSignupSubmit, 
-    onSigninSubmit,
+const AddCardModal: React.FC<AddCardModalProps> = ({ 
+    onAddCardSubmit,
     onClose
 }) => {
-
-    const [authTab, setAuthTab] = useState<'signup' | 'signin'>('signup');
 
     const handleClose = () => {
         onClose();
     };
-
-    const renderTabButtons = () => (
-        <div className="tab-buttons">
-            <button 
-                className={`tab-btn ${authTab === 'signup' ? 'active' : ''}`}
-                onClick={() => setAuthTab('signup')}
-            >
-                Sign Up
-            </button>
-            <button 
-                className={`tab-btn ${authTab === 'signin' ? 'active' : ''}`}
-                onClick={() => setAuthTab('signin')}
-            >
-                Sign In
-            </button>
-        </div>
-    );
 
     return (
         <>
             <div className='form'>
                 <div className='formContainer'>
                     <button className="close-x" onClick={handleClose}>&times;</button>
-                    
-                    <h2>{authTab === 'signup' ? 'Create Account' : 'Sign In'}</h2>
-                    
-                    {renderTabButtons()}
-                    
-                    {authTab === 'signup' ? (
-                        <NewUserForm onFormSubmit={onSignupSubmit} />
-                    ) : (
-                        <LoginForm onFormSubmit={onSigninSubmit} />
-                    )}
+                    <NewCardForm onFormSubmit={onAddCardSubmit}></NewCardForm>
                 </div>
             </div>
             <div 
@@ -63,4 +33,4 @@ const SignUpLoginModal: React.FC<SignUpLoginModalProps> = ({
     );
 };
 
-export default SignUpLoginModal;
+export default AddCardModal;
