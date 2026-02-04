@@ -12,7 +12,7 @@ interface UserSession {
     username?: string;
 }
 
-const AnnualFeeTotal: React.FC = () => {
+const TotalTransactionTotal: React.FC = () => {
     const [totalTransactionAmount, setTotalTransactionAmount] = useState<number>(0);
 
     let currentDate: Date = new Date();
@@ -44,10 +44,10 @@ const AnnualFeeTotal: React.FC = () => {
                 <p className="amount">
                     `$${totalTransactionAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                 </p>
-                <span className="period">as of ${currentDate}</span>
+                <span className="period">as of ${currentDate.toLocaleDateString()}</span>
             </div>
         </div>
     );
 };
 
-export default AnnualFeeTotal;
+export default TotalTransactionTotal;

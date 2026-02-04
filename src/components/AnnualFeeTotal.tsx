@@ -40,7 +40,7 @@ const AnnualFeeTotal: React.FC = () => {
             </div>
             <div className="card-body">
                 <p className="amount">
-                    `$${totalFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                    ${totalFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
                 <span className="period">per year</span>
             </div>

@@ -5,6 +5,7 @@ import AnnualFeeTotal from '../components/AnnualFeeTotal';
 import SummaryTransaction from '../components/SummaryTransaction';
 import NewCardForm from '../components/NewCardForm';
 import CardList from '../components/CardList';
+import AddCardModal from '../components/AddCardModalSummary.js';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -36,6 +37,7 @@ const Summary: React.FC = () => {
             const storedUser = localStorage.getItem('user');
             if (!storedUser) return;
             const user = JSON.parse(storedUser);
+            console.log("User in storage:", user, user.id);
 
             const res = await axios.get(`${backendUrl}/usercreditcard/user/${user.id}`);
             setCards(res.data);
@@ -107,13 +109,10 @@ const Summary: React.FC = () => {
                 </section>
 
                 {isModalOpen && (
-                    <div className="modal-container">
-                        <div className="modal-header">
-                            <h2>Add New Credit Card</h2>
-                            <button className="close-x" onClick={() => setIsModalOpen(false)}>&times;</button>
-                        </div>
-                        <NewCardForm onFormSubmit={handleAddCard} />
-                    </div>
+                    <AddCardModal
+                        onAddCardSubmit={handleAddCard}
+                        onClose={() => setIsModalOpen(false)}
+                    />
                 )}
             </div>
     );
