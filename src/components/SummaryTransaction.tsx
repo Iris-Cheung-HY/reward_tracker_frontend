@@ -44,7 +44,7 @@ const TotalTransactionTotal: React.FC = () => {
                 <p className="amount">
                     `$${totalTransactionAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                 </p>
-                <span className="period">as of ${currentDate.toLocaleDateString()}</span>
+                <span className="period">as of {currentDate.toLocaleDateString()}</span>
             </div>
         </div>
     );
