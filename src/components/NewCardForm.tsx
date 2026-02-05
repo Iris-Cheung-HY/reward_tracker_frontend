@@ -31,6 +31,7 @@ interface BankCreditCardDTO {
 
 
 const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
+    alert("fetching...")
     const defaultCardFormData: NewCardFormData = {
         lastFourDigits: '',
         bankName: '',
