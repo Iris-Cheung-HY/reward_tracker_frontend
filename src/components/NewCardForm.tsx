@@ -31,7 +31,6 @@ interface BankCreditCardDTO {
 
 
 const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
-    alert("fetching...")
     const defaultCardFormData: NewCardFormData = {
         lastFourDigits: '',
         bankName: '',
@@ -133,12 +132,18 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
         ? filteredCards.filter(card => card.cardType === cardFormData.cardType)
         : filteredCards;
     
-        console.log("Bug check", {
-    isDuplicate,
-    bankCardId: cardFormData.bankCardId,
-    digitsLen: cardFormData.lastFourDigits.length,
-    openMonth: cardFormData.openMonth
-});
+
+    const isDigitsValid = cardFormData.lastFourDigits.length === 4;
+    const isBankSelected = cardFormData.bankCardId !== '';
+    const isMonthSelected = cardFormData.openMonth !== '';
+    const canSubmit = isDigitsValid && isBankSelected && isMonthSelected && !isDuplicate;
+
+    console.log("Submit Check ->", { 
+        digits: isDigitsValid, 
+        bank: isBankSelected, 
+        month: isMonthSelected, 
+        duplicate: isDuplicate 
+    });
 
     return (
         <form onSubmit={handleSubmit} className="newCardForm">
@@ -199,14 +204,22 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
             </div>
 
             
-            <button 
-                className="submitButton" 
-                type="submit" 
-                disabled={isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4 || !cardFormData.openMonth }
-            >
-                Create Card
-            </button>
-        </form>
+            <div style={{color: 'red'}}>{errMsg}</div>
+
+                <button 
+                    className="submitButton" 
+                    type="submit" 
+                    disabled={!canSubmit}
+                    style={{ 
+                        backgroundColor: canSubmit ? '#007bff' : '#ccc',
+                        cursor: canSubmit ? 'pointer' : 'not-allowed',
+                        padding: '10px',
+                        marginTop: '20px'
+                    }}
+                >
+                    {canSubmit ? "Create Card Now" : "Please Fill All Fields"}
+                </button>
+            </form>
     );
 };
 
