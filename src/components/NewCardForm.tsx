@@ -103,6 +103,7 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
 
     const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
+        console.log(`${name} = ${value}`);
         setCardFormData(prev => ({ 
             ...prev, 
             [name]: value 
@@ -130,6 +131,13 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
     const cardOptions = cardFormData.cardType 
         ? filteredCards.filter(card => card.cardType === cardFormData.cardType)
         : filteredCards;
+    
+        console.log("Bug check", {
+    isDuplicate,
+    bankCardId: cardFormData.bankCardId,
+    digitsLen: cardFormData.lastFourDigits.length,
+    openMonth: cardFormData.openMonth
+});
 
     return (
         <form onSubmit={handleSubmit} className="newCardForm">
@@ -173,7 +181,7 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
                     ))}
                 </select>
 
-                <label>Anniversary Month</label>
+                <label>Open Month</label>
                 <select 
                     name="openMonth" 
                     value={cardFormData.openMonth} 
