@@ -33,12 +33,10 @@ const Summary: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchUserCards = async () => {
-        console.log("Checking localStorage for user...");
         try {
             const storedUser = localStorage.getItem('user');
             if (!storedUser) return;
             const user = JSON.parse(storedUser);
-            console.log("User in storage:", user, user.id);
 
             const res = await axios.get(`${backendUrl}/usercreditcard/user/${user.id}`);
             setCards(res.data);

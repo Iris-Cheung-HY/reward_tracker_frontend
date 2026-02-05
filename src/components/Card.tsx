@@ -5,20 +5,29 @@ interface CardProps {
     image: string;
     lastFourDigits: string;
     onDelete: (id: number) => void;
+    onClick?: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ id, image, lastFourDigits, onDelete }) => {
+const Card: React.FC<CardProps> = ({ id, image, lastFourDigits, onDelete, onClick }) => {
     return (
         <li className="card-item">
-            <div className="card-container" style={{ position: 'relative' }}>
+            <div className="card-image-wrapper" style={{ position: 'relative', cursor: 'pointer' }} onClick={onClick}>
+                
                 <button 
-                    className="delete-button" 
-                    onClick={() => onDelete(id)}
+                    className="delete-x-btn" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(id);
+                    }}
                 >
                     &times;
                 </button>
                 
-                <img src={image} alt="Credit Card" className="card-image" />
+                <img 
+                    src={image} 
+                    alt="Credit Card" 
+                    className="card-image" 
+                />
                 
                 <div className="card-digits">
                     {lastFourDigits}
