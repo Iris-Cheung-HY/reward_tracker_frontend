@@ -4,11 +4,12 @@ interface CardProps {
     id: number;
     image: string;
     lastFourDigits: string;
+    openMonth: string;
     onDelete: (id: number) => void;
     onClick?: () => void;
 }
 
-const Card: React.FC<CardProps> = ({ id, image, lastFourDigits, onDelete, onClick }) => {
+const Card: React.FC<CardProps> = ({ id, image, lastFourDigits, openMonth, onDelete, onClick }) => {
     return (
         <li className="card-item">
             <div className="card-image-wrapper" style={{ position: 'relative', cursor: 'pointer' }} onClick={onClick}>
@@ -31,6 +32,10 @@ const Card: React.FC<CardProps> = ({ id, image, lastFourDigits, onDelete, onClic
                 
                 <div className="card-digits">
                     {lastFourDigits}
+                </div>
+                
+                <div className="card-month">
+                    {openMonth}
                 </div>
             </div>
         </li>

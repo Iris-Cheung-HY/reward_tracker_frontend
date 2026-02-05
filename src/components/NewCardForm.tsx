@@ -4,6 +4,10 @@ import axios from 'axios';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
+const MONTH_OPTIONS = [
+    "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+    "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+];
 
 type NewCardFormData = {
     lastFourDigits: string;
@@ -11,6 +15,7 @@ type NewCardFormData = {
     cardName: string;
     cardType: string;
     bankCardId: number | string;
+    openMonth: string;
 }
 
 type NewCardFormProps = {
@@ -31,7 +36,8 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
         bankName: '',
         cardName: '',
         cardType: '',
-        bankCardId: ''
+        bankCardId: '',
+        openMonth: ''
     };
 
     const [cardFormData, setCardFormData] = useState(defaultCardFormData);
@@ -114,7 +120,7 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
 
     const handleSubmit = (event :React.FormEvent) => {
         event.preventDefault();
-        if(isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4) {
+        if(isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4 || !cardFormData.openMonth) {
             return;
         }
         onFormSubmit(cardFormData);
@@ -166,12 +172,28 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
                         <option key={card.id} value={card.id}>{card.cardName} ({card.cardType})</option>
                     ))}
                 </select>
+
+                <label>Anniversary Month</label>
+                <select 
+                    name="openMonth" 
+                    value={cardFormData.openMonth} 
+                    onChange={handleInputChange} 
+                    className="formInput"
+                >
+                    <option value="">Select Month</option>
+                    {MONTH_OPTIONS.map((month) => (
+                        <option key={month} value={month}>
+                            {month}
+                        </option>
+                    ))}
+                </select>
             </div>
+
             
             <button 
                 className="submitButton" 
                 type="submit" 
-                disabled={isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4}
+                disabled={isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4 || !cardFormData.openMonth }
             >
                 Create Card
             </button>

@@ -15,6 +15,7 @@ interface UserCard {
     id: number;
     lastFourDigits: string;
     bankCreditCard: BankCreditCard;
+    openMonth: string;
 }
 
 interface CardListProps {
@@ -41,6 +42,7 @@ const CardList: React.FC<CardListProps> = ({ cards, onDelete, onAdd }) => {
                         id={card.id}
                         image={card.bankCreditCard.cardImage} 
                         lastFourDigits={card.lastFourDigits}
+                        openMonth={card.openMonth}
                         onDelete={onDelete}
                     />
                 ))}
