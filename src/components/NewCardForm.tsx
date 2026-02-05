@@ -194,20 +194,14 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
             
             <div style={{color: 'red'}}>{errMsg}</div>
 
-                <button 
-                    className="submitButton" 
-                    type="submit" 
-                    disabled={!canSubmit}
-                    style={{ 
-                        backgroundColor: canSubmit ? '#007bff' : '#ccc',
-                        cursor: canSubmit ? 'pointer' : 'not-allowed',
-                        padding: '10px',
-                        marginTop: '20px'
-                    }}
-                >
-                    {canSubmit ? "Create Card Now" : "Please Fill All Fields"}
-                </button>
-            </form>
+            <button 
+                className="submitButton" 
+                type="submit" 
+                disabled={isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4 || !cardFormData.openMonth}
+            >
+                Create Card
+            </button>
+        </form>
     );
 };
 
