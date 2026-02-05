@@ -1,4 +1,3 @@
-// Card.tsx 範例
 import React from 'react';
 
 interface CardProps {

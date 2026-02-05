@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from './Card.tsx';
 import './CardList.css';
+import { useNavigate } from 'react-router-dom';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 

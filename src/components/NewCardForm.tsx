@@ -73,7 +73,7 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
         fetchBanks();
     }, []);
 
-    const handleBankInputChange = async(event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleBankInputChange = async(event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedBank = event.target.value;
         
         setCardFormData(prev => ({
@@ -91,22 +91,26 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
                 console.error("Fetch cards error", error);
             }
             } else {
-                setFilteredCards([]);
+                setFilteredCards([]); 
             }
         }
 
-    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setCardFormData(prev => ({ 
             ...prev, 
             [name]: value 
         }));
+        
+        if (name === "bankCardId") {
+            const selectedObject = filteredCards.find(c => c.id.toString() === value);
+            if (selectedObject) {
+                setCardFormData(prev => ({ ...prev, cardName: selectedObject.cardName}));
+
+            }
+        }
         setDisableSubmit(false);
     };
-
-
-    const cardOptions = filteredCards.filter(
-        card => card.cardType === cardFormData.cardType);
 
     const handleSubmit = (event :React.FormEvent) => {
         event.preventDefault();
@@ -116,12 +120,16 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
         onFormSubmit(cardFormData);
     };
 
+
+    const cardOptions = cardFormData.cardType 
+        ? filteredCards.filter(card => card.cardType === cardFormData.cardType)
+        : filteredCards;
+
     return (
         <form onSubmit={handleSubmit} className="newCardForm">
             <div className="formContainer">
                 <div>
-                    <p className="inputErrorMessage" style={{color: 'red'}}>{errMsg}</p>
-                    <label>Create Card</label>
+                    <label>Last 4 Digits</label>
                     <input
                         name="lastFourDigits"
                         type="text"
@@ -129,34 +137,37 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
                         onChange={handleInputChange}
                         onBlur={() => checkCardWithLastFourDigits(cardFormData.lastFourDigits)}
                         className="formInput"
-                        placeholder="Last 4 digits of your card"
                     />
                 </div>
+
                 <label>Bank Name</label>
                 <select name="bankName" value={cardFormData.bankName} onChange={handleBankInputChange} className="formInput">
                     <option value="">Select Bank Name</option>
-                    {
-                        banks.map(bank =>
-                            <option key={bank} value={bank}>{bank}</option>
-                        )
-                    }
+                    {banks.map(bank => <option key={bank} value={bank}>{bank}</option>)}
                 </select>
+
+                <label>Card Type</label>
+                <select name="cardType" value={cardFormData.cardType} onChange={handleInputChange} className="formInput">
+                    <option value="">Select Type (Optional)</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Business">Business</option>
+                </select>
+
                 <label>Card Name</label>
-                <select name="bankCardId" value={cardFormData.bankCardId} onChange={handleInputChange} className="formInput">
+                <select 
+                    name="bankCardId" 
+                    value={cardFormData.bankCardId} 
+                    onChange={handleInputChange} 
+                    className="formInput"
+                    disabled={!cardFormData.bankName}
+                >
                     <option value="">Select Card Name</option>
                     {cardOptions.map(card => (
-                        <option key={card.id} value={card.id}>{card.cardName}</option>
+                        <option key={card.id} value={card.id}>{card.cardName} ({card.cardType})</option>
                     ))}
                 </select>
-                <div>
-                    <label>Card Type</label>
-                    <select name="cardType" value={cardFormData.cardType} onChange={handleInputChange} className="formInput">
-                        <option value="">Select Type</option>
-                        <option value="Personal">Personal</option>
-                        <option value="Business">Business</option>
-                    </select>
-                </div>
             </div>
+            
             <button 
                 className="submitButton" 
                 type="submit" 
