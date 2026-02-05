@@ -64,6 +64,8 @@ const Summary: React.FC = () => {
             if (!storedUser) return;
             const user = JSON.parse(storedUser);
 
+            console.log(formData);
+
             await axios.post(`${backendUrl}/usercreditcard/user/${user.id}`, formData);
             alert("Card added successfully!");
             setIsModalOpen(false);
