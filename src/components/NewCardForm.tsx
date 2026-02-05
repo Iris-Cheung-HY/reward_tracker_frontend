@@ -133,18 +133,6 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
         : filteredCards;
     
 
-    const isDigitsValid = cardFormData.lastFourDigits.length === 4;
-    const isBankSelected = cardFormData.bankCardId !== '';
-    const isMonthSelected = cardFormData.openMonth !== '';
-    const canSubmit = isDigitsValid && isBankSelected && isMonthSelected && !isDuplicate;
-
-    console.log("Submit Check ->", { 
-        digits: isDigitsValid, 
-        bank: isBankSelected, 
-        month: isMonthSelected, 
-        duplicate: isDuplicate 
-    });
-
     return (
         <form onSubmit={handleSubmit} className="newCardForm">
             <div className="formContainer">
