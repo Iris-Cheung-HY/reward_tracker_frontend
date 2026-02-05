@@ -114,7 +114,7 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
 
     const handleSubmit = (event :React.FormEvent) => {
         event.preventDefault();
-        if(disableSubmit || isDuplicate || !cardFormData.bankCardId) {
+        if(isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4) {
             return;
         }
         onFormSubmit(cardFormData);
@@ -171,7 +171,7 @@ const NewCardForm: React.FC<NewCardFormProps> = ({ onFormSubmit }) => {
             <button 
                 className="submitButton" 
                 type="submit" 
-                disabled={disableSubmit || isDuplicate || !cardFormData.bankCardId}
+                disabled={isDuplicate || !cardFormData.bankCardId || cardFormData.lastFourDigits.length !== 4}
             >
                 Create Card
             </button>
