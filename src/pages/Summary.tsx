@@ -25,6 +25,7 @@ interface NewCardFormData {
     lastFourDigits: string;
     bankCardId: number | string;
     cardType: string;
+    openMonth: string;
 }
 
 const Summary: React.FC = () => {
@@ -63,12 +64,7 @@ const Summary: React.FC = () => {
             if (!storedUser) return;
             const user = JSON.parse(storedUser);
 
-            await axios.post(`${backendUrl}/usercreditcard/user/${user.id}`, {
-                lastFourDigits: formData.lastFourDigits,
-                bankCardId: formData.bankCardId,
-                cardType: formData.cardType
-            });
-
+            await axios.post(`${backendUrl}/usercreditcard/user/${user.id}`, formData);
             alert("Card added successfully!");
             setIsModalOpen(false);
             fetchUserCards();
