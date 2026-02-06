@@ -43,7 +43,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
             try {
                 setLoading(true);
 
-                const res = await axios.get(`${backendUrl}/bankcardrewards/card/${cardId}/categories`);
+                const res = await axios.get(`${backendUrl}/bankcardrewards/categories`);
                 
                 if (res.data && res.data.length > 0) {
                     setRewards(res.data);
@@ -91,7 +91,6 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
     return (
         <form onSubmit={handleSubmit} className="transaction-form">
             <div className="form-body">
-                {/* Date Input */}
                 <div className="form-group mb-3">
                     <label className="form-label">Date</label>
                     <input
