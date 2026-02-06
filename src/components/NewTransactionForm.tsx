@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 type RewardInfo = {
@@ -25,7 +26,8 @@ type NewTransactionFormProps = {
 }
 
 const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, cardId }) => {
-
+    
+    console.log("Check cardId status:", cardId, typeof cardId);
     const [formData, setFormData] = useState<NewTransactionFormData>({
         date: new Date().toISOString().split('T')[0] || "", 
         category: '',
