@@ -4,7 +4,7 @@ interface TransactionProps {
     id: number;
     date: string;
     category: string;
-    amount: number;
+    amount: number | string;
     description: string;
     onDelete: (id: number) => void;
     onClick?: () => void;
@@ -15,7 +15,7 @@ const Transaction: React.FC<TransactionProps> = ({id, date, category, amount, de
         <tr>
         <td>{date}</td>
         <td><span className="badge rounded-pill bg-info text-dark">{category}</span></td>
-        <td className="fw-bold text-danger">-${Number(amount).toFixed(2)}</td>
+        <td className="fw-bold text-danger">-${Number(amount || 0).toFixed(2)}</td>
         <td>{description}</td>
         <td>
             <button className="btn btn-sm btn-outline-danger"

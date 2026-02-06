@@ -84,6 +84,7 @@ const Summary: React.FC = () => {
     }, []);
 
     const handleCardClick = (cardId: number) => {
+        console.log("Navigating card")
         navigate(`/card/${cardId}`);
     }
 

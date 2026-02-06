@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Transaction from './Transaction';
 import './CardList.css';
+import axios from 'axios';
+
+const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 interface TransactionItem {
     id: number;
@@ -11,17 +14,61 @@ interface TransactionItem {
 }
 
 interface TransactionListProps {
-    transactions: TransactionItem[];
+    userId: number;
+    cardId: number;
     onDelete: (id: number) => void;
     onAdd: () => void;
 }
 
-const TransactionList: React.FC<TransactionListProps> = ({ transactions, onDelete, onAdd }) => {
+const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId }) => {
+    const [transactions, setTransactions] = useState<TransactionItem[]>([]);
+    const [loading, setLoading] = useState(true);
+
+
+    const fetchTransactions = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`);
+            setTransactions(res.data);
+        } catch (error) {
+            console.error("Failed to fetch transactions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                setLoading(true);
+                const res = await axios.get(
+                    `${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`
+                );
+                setTransactions(res.data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (userId && cardId) {
+            fetchTransactions();
+        }
+    }, [userId, cardId]);
+
+    const handleDelete = async (id: number) => {
+        if (window.confirm("Delete this transaction?")) {
+            await axios.delete(`${backendUrl}/transactions/${id}`);
+            fetchTransactions();
+        }
+    };
+
     return (
         <div className="trans-list-container shadow-sm rounded bg-white p-3">
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h5 className="mb-0">Transaction History</h5>
-                <button className="btn btn-primary btn-sm" onClick={onAdd}>
+                <button className="btn btn-primary btn-sm">
                     <span className="me-1">+</span> Add Transaction
                 </button>
             </div>
@@ -53,7 +100,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onDelet
                                     category={transaction.category}
                                     amount={transaction.amount}
                                     description={transaction.description}
-                                    onDelete={onDelete}
+                                    onDelete={handleDelete}
                                 />
                             ))
                         )}
@@ -63,5 +110,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onDelet
         </div>
     );
 }
+
 
 export default TransactionList;

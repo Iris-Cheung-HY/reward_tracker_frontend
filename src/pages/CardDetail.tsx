@@ -22,21 +22,15 @@ interface UserCard {
 
 const CardDetail: React.FC = () => {
     const { cardId } = useParams<{ cardId: string }>(); 
+    const [userId, setUserId] = useState<number | null>(null);
     const [cardData, setCardData] = useState<UserCard | null>(null);
 
     useEffect(() => {
-        const fetchDetail = async () => {
-            if (!cardId) return; 
-            
-            try {
-                const res = await axios.get(`${backendUrl}/usercreditcard/${cardId}`);
-                setCardData(res.data);
-            } catch (error) {
-                console.error("Error fetching card details:", error);
-            }
-        };
-        fetchDetail();
-    }, [cardId]);
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+        setUserId(JSON.parse(storedUser).id);
+    }
+    }, []);
 
     return (
         <div className="card-details-page">
@@ -46,7 +40,9 @@ const CardDetail: React.FC = () => {
                 </div>
 
                 <div className="transaction-mini-log">
-                    {cardId && <TransactionList cardId={Number(cardId)} />}
+                    {userId && cardId && (
+                        <TransactionList userId={userId} cardId={Number(cardId)} />
+                    )}
                 </div>
             </div>
         </div>
