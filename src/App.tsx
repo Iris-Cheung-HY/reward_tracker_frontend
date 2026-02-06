@@ -5,6 +5,7 @@ import Navbar from './layout/Navbar';
 import axios from 'axios';
 import Forum from './pages/Forum';
 import Summary from './pages/Summary';
+import CardDetail from './pages/CardDetail';
 
 
 const App: React.FC = () => {
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path ="/" element={<Forum />} />
           <Route path="/summary" element={<Summary />} />
+          <Route path="/card/:cardId" element={<CardDetail />} />
         </Routes>
       </Router>
     </>
