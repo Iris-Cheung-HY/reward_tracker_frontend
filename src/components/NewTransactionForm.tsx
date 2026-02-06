@@ -42,7 +42,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
             const fetchCategories = async () => {
                 try {
                     setLoading(true);
-                    const res = await axios.get(`${backendUrl}/bankcardrewards/categories`);
+                    const res = await axios.get(`${backendUrl}/bankrewards/categories`);
                     
                     if (res.data && res.data.length > 0) {
                         if (typeof res.data[0] === 'object') {
