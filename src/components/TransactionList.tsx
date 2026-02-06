@@ -20,7 +20,7 @@ interface TransactionListProps {
     onAdd: () => void;
 }
 
-const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId }) => {
+const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onDelete, onAdd }) => {
     const [transactions, setTransactions] = useState<TransactionItem[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -68,7 +68,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId }) => 
         <div className="trans-list-container shadow-sm rounded bg-white p-3">
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h5 className="mb-0">Transaction History</h5>
-                <button className="btn btn-primary btn-sm">
+                <button className="btn btn-primary btn-sm" onClick={onAdd}>
                     <span className="me-1">+</span> Add Transaction
                 </button>
             </div>
