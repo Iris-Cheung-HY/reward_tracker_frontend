@@ -8,7 +8,7 @@ const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 interface TransactionItem {
     id: number;
     date: string;
-    category: string;
+    merchantType: string;
     amount: number;
     description: string;
 }
@@ -97,7 +97,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onDel
                                     key={transaction.id}
                                     id={transaction.id}
                                     date={transaction.date}
-                                    category={transaction.category}
+                                    category={transaction.merchantType}
                                     amount={transaction.amount}
                                     description={transaction.description}
                                     onDelete={handleDelete}
