@@ -22,10 +22,11 @@ interface CardListProps {
     cards: UserCard[];
     onDelete: (id: number) => void;
     onAdd: () => void;
+    onCardClick?: (id: number) => void;
 }
 
 
-const CardList: React.FC<CardListProps> = ({ cards, onDelete, onAdd }) => {
+const CardList: React.FC<CardListProps> = ({ cards, onDelete, onAdd, onCardClick }) => {
     return (
         <div className="card-list-container">
             <ul className="card__list no-bullet">
@@ -44,6 +45,7 @@ const CardList: React.FC<CardListProps> = ({ cards, onDelete, onAdd }) => {
                         lastFourDigits={card.lastFourDigits}
                         openMonth={card.openMonth}
                         onDelete={onDelete}
+                        onClick={() => onCardClick?.(card.id)}
                     />
                 ))}
             </ul>
