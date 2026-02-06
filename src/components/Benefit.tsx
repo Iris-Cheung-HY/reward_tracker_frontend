@@ -1,5 +1,5 @@
 import React from 'react';
-import { RewardsDTO } from './BenefitsList';
+import type { RewardsDTO } from './BenefitsList';
 
 interface BenefitProps {
     reward: RewardsDTO;
