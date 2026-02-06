@@ -53,4 +53,4 @@ const CardDetail: React.FC = () => {
     );
 }
 
-export default CardDetails;
+export default CardDetail;
