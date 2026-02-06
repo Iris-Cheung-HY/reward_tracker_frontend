@@ -46,17 +46,20 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                 const res = await axios.get(`${backendUrl}/bankcardrewards/categories`);
                 
                 if (res.data && res.data.length > 0) {
-                    setRewards(res.data);
+                    if (typeof res.data[0] === 'object') {
+                        const categoryNames = res.data.map((item: any) => item.merchantType || item.category);
+                        setRewards(categoryNames);
+                    } else {
+                        setRewards(res.data);
+                    }
                 } 
             } catch (error) {
                 console.error("Fetch categories failed:", error);
+                setErrMsg("Failed to load categories.");
             } finally {
                 setLoading(false);
             }
         };
-
-        if (cardId) fetchCategories();
-    }, [cardId]);
 
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -113,7 +116,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                         required
                         disabled={loading}
                     >
-                        <option value="">-- {loading ? "Loding" : "Category"} --</option>
+                        <option value="">-- {loading ? "Loding" : "Select Category"} --</option>
                         {rewards.map(rew => (
                             <option key={rew} value={rew}>{rew}</option>
                         ))}
