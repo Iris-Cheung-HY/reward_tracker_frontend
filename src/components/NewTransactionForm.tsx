@@ -39,27 +39,31 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
 
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                setLoading(true);
+            const fetchCategories = async () => {
+                try {
+                    setLoading(true);
+                    const res = await axios.get(`${backendUrl}/bankcardrewards/categories`);
+                    
+                    if (res.data && res.data.length > 0) {
+                        if (typeof res.data[0] === 'object') {
+                            const categoryNames = res.data.map((item: any) => item.merchantType || item.category);
+                            setRewards(categoryNames);
+                        } else {
+                            setRewards(res.data);
+                        }
+                    } 
+                } catch (error) {
+                    console.error("Fetch categories failed:", error);
+                    setErrMsg("Failed to load categories.");
+                } finally {
+                    setLoading(false);
+                }
+            };
 
-                const res = await axios.get(`${backendUrl}/bankcardrewards/categories`);
-                
-                if (res.data && res.data.length > 0) {
-                    if (typeof res.data[0] === 'object') {
-                        const categoryNames = res.data.map((item: any) => item.merchantType || item.category);
-                        setRewards(categoryNames);
-                    } else {
-                        setRewards(res.data);
-                    }
-                } 
-            } catch (error) {
-                console.error("Fetch categories failed:", error);
-                setErrMsg("Failed to load categories.");
-            } finally {
-                setLoading(false);
+            if (cardId) {
+                fetchCategories();
             }
-        };
+        }, [cardId]);
 
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
