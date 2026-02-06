@@ -5,6 +5,7 @@ import './CardDetail.css';
 import Card from '../components/Card';
 import TransactionList from '../components/TransactionList';
 import AddTransactionModal from '../components/AddTransactionModal';
+import BenefitsList from '../components/BenefitsList';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -106,6 +107,12 @@ const CardDetail: React.FC = () => {
                     )}
                 </div>
             </div>
+            {cardId && (
+                <div className="benefits-section-wrapper" style={{ marginTop: '2rem' }}>
+                    <BenefitsList userCardId={cardId} />
+                </div>
+            )}
+            
             {isModalOpen && (
                 <AddTransactionModal 
                     onAddTransactionSubmit={handleAddTransactionSubmit}

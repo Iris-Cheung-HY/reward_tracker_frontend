@@ -54,7 +54,7 @@ const Summary: React.FC = () => {
             try {
                 await axios.delete(`${backendUrl}/usercreditcard/${id}`);
                 fetchUserCards();
-                window.location.reload();
+                alert("Card deleted successfully!");
             } catch (error) {
                 console.error("Delete failed:", error);
             }
