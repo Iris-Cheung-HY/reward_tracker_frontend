@@ -17,12 +17,11 @@ interface BankCreditCard {
 interface UserCard {
     id: number;
     lastFourDigits: string;
-    openMonth: string;
+    openMonth: number;
     bankCreditCard: BankCreditCard;
 }
 
-interface TransactionsDetail {
-    id: number;
+interface TransactionDetail {
     date: string;
     category: string;
     amount: number;
@@ -39,10 +38,23 @@ const CardDetail: React.FC = () => {
     const handleDeleteTransaction = async (id: number) => {
         try {
             await axios.delete(`${backendUrl}/transactionrecords/${id}`);
-            fetchUsertransactions();
             window.location.reload();
         } catch (error) {
             console.error("Delete failed:", error);
+        }
+    };
+
+    const handleAddTransactionSubmit = async (formData: TransactionDetail) => {
+        try {
+            if (!userId || !cardId) return;
+            await axios.post(
+                `${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`, 
+                formData
+            );
+            setIsModalOpen(false);
+            window.location.reload(); 
+        } catch (error) {
+            console.error("Failed to add transaction:", error);
         }
     };
 
@@ -50,9 +62,9 @@ const CardDetail: React.FC = () => {
         try {
             setIsLoading(true);
             const res = await axios.get(`${backendUrl}/usercreditcard/${id}`);
-            setCardData(res.data);
+            setCardData(res.data); 
         } catch (error) {
-            console.error("Error fetching cards:", error);
+            console.error("Error fetching card info:", error);
         } finally {
             setIsLoading(false);
         }
@@ -77,7 +89,7 @@ const CardDetail: React.FC = () => {
                             id={cardData.id}
                             image={cardData.bankCreditCard.cardImage} 
                             lastFourDigits={cardData.lastFourDigits}
-                            openMonth={cardData.openMonth}
+                            openMonth={String(cardData.openMonth)}
                             onDelete={() => {}}
                         />
                     )}
@@ -94,6 +106,13 @@ const CardDetail: React.FC = () => {
                     )}
                 </div>
             </div>
+            {isModalOpen && (
+                <AddTransactionModal 
+                    onAddTransactionSubmit={handleAddTransactionSubmit}
+                    onClose={() => setIsModalOpen(false)}
+                    cardId={Number(cardId)}
+                />
+            )}
         </div>
     );
 }
