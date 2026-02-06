@@ -6,6 +6,7 @@ import SummaryTransaction from '../components/SummaryTransaction';
 import NewCardForm from '../components/NewCardForm';
 import CardList from '../components/CardList';
 import AddCardModal from '../components/AddCardModalSummary.js';
+import { useNavigate } from 'react-router-dom';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -32,6 +33,7 @@ const Summary: React.FC = () => {
     const [cards, setCards] = useState<UserCard[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
 
     const fetchUserCards = async () => {
         try {
@@ -81,6 +83,10 @@ const Summary: React.FC = () => {
         fetchUserCards();
     }, []);
 
+    const handleCardClick = (cardId: number) => {
+        navigate(`/card/${cardId}`);
+    }
+
     return (
         <div className="summary-page">
             <header className="summary-header">
@@ -101,7 +107,8 @@ const Summary: React.FC = () => {
                     <CardList 
                         cards={cards} 
                         onDelete={handleDeleteCard} 
-                        onAdd={() => setIsModalOpen(true)} 
+                        onAdd={() => setIsModalOpen(true)}
+                        onCardClick={handleCardClick} 
                     />
                 </section>
 
