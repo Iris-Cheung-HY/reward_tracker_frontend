@@ -26,8 +26,6 @@ type NewTransactionFormProps = {
 }
 
 const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, cardId }) => {
-    
-    console.log("Check cardId status:", cardId, typeof cardId);
     const [formData, setFormData] = useState<NewTransactionFormData>({
         date: new Date().toISOString().split('T')[0] || "", 
         category: '',
@@ -45,7 +43,6 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                 try {
                     setLoading(true);
                     const res = await axios.get(`${backendUrl}/bankrewards/categories`);
-                    console.log("Full response object:", res);
                     if (res.data && res.data.length > 0) {
                         if (typeof res.data[0] === 'object') {
                             const categoryNames = res.data.map((item: any) => item.merchantType || item.category);

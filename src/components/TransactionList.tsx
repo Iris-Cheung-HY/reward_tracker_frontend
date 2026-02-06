@@ -59,7 +59,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onDel
 
     const handleDelete = async (id: number) => {
         if (window.confirm("Delete this transaction?")) {
-            await axios.delete(`${backendUrl}/transactions/${id}`);
+            await axios.delete(`${backendUrl}/transactionrecords/${id}`);
             fetchTransactions();
         }
     };
