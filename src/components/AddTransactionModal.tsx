@@ -3,11 +3,13 @@ import './AddTransactionModal.css';
 import NewTransactionForm from './NewTransactionForm';
 
 type AddTransactionModalProps = {
+    cardId: number;
     onAddTransactionSubmit: (data: any) => void; 
     onClose: () => void;
 };
 
-const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ 
+const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
+    cardId,
     onAddTransactionSubmit,
     onClose
 }) => {
@@ -24,7 +26,10 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
                         <h3>Add New Transaction</h3>
                         <button className="close-x" onClick={onClose}>&times;</button>
                     </div>
-                    <NewTransactionForm onFormSubmit={onAddTransactionSubmit} />
+                    <NewTransactionForm 
+                        cardId={cardId}
+                        onFormSubmit={onAddTransactionSubmit}
+                    />
                 </div>
             </div>
         </div>
