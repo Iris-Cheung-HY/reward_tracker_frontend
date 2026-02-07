@@ -1,5 +1,6 @@
 import React from 'react';
 import type { RewardsDTO } from './BenefitsList';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 interface BenefitProps {
     reward: RewardsDTO;
@@ -22,14 +23,14 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                     <span className="text-uppercase text-muted fw-bold x-small tracking-wider">
                         {reward.merchantType}
                     </span>
-                        {reward.conditions && (
-                            <div className="tooltip-container">
-                                <span className="info-icon">ℹ️</span>
-                                <div className="tooltip-text">
-                                    {reward.conditions}
-                                </div>
-                            </div>
-                        )}
+                    {reward.conditions && (
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip id={`tooltip-${reward.merchantType}`}>{reward.conditions}</Tooltip>}
+                        >
+                            <span style={{ cursor: 'pointer' }}>ℹ️</span>
+                        </OverlayTrigger>
+                    )}
                 </div>
 
                 {isPoints && (
@@ -71,11 +72,7 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                                     {reward.eligible ? "✅ Goal Achieved!" : `Almost there, $${reward.remainingAmount.toLocaleString()} more to go`}
                                 </p>
                             </>
-                        ) : (
-                            <p className="small mb-0 text-success fw-bold">
-                                ✨ Included with Card Membership
-                            </p>
-                        )}
+                        ) : null}
                     </div>
                 )}
             </div>
