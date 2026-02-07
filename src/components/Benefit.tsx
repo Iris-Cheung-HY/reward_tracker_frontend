@@ -46,19 +46,36 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                     <div className="progress-content">
                         <div className="d-flex justify-content-between align-items-end mb-1">
                             <h3 className="fw-bold mb-0">
-                                {isFreeNight ? `$${reward.usedAmount.toFixed(0)} / $${reward.totalAmount}` : `$${reward.usedAmount.toFixed(0)}`}
+                                {(isFreeNight && reward.totalAmount <= 1) 
+                                    ? "Anniversary Gift" 
+                                    : `$${reward.usedAmount.toFixed(0)} / $${reward.totalAmount}`
+                                }
                             </h3>
-                            <span className="text-muted small">Goal: ${reward.totalAmount?.toLocaleString()}</span>
+                            <span className="text-muted small">
+                                {(isFreeNight && reward.totalAmount <= 1)
+                                    ? "Yearly Cardmember Perk"
+                                    : `Goal: Spend $${reward.totalAmount?.toLocaleString()} for a Cat 1-4 Free Night`
+                                }
+                            </span>
                         </div>
-                        <div className="progress mb-2" style={{ height: '10px', borderRadius: '5px' }}>
-                            <div 
-                                className={`progress-bar ${reward.eligible ? 'bg-success' : 'bg-info'} progress-bar-striped progress-bar-animated`} 
-                                style={{ width: `${progressPercent}%` }}
-                            />
-                        </div>
-                        <p className="small mb-0 text-secondary">
-                            {reward.eligible ? "✅ Goal Achieved!" : `Almost there, $${reward.remainingAmount.toLocaleString()} more to go`}
-                        </p>
+
+                        {reward.totalAmount > 1 ? (
+                            <>
+                                <div className="progress mb-2" style={{ height: '10px', borderRadius: '5px' }}>
+                                    <div 
+                                        className={`progress-bar ${reward.eligible ? 'bg-success' : 'bg-info'} progress-bar-striped progress-bar-animated`} 
+                                        style={{ width: `${progressPercent}%` }}
+                                    />
+                                </div>
+                                <p className="small mb-0 text-secondary">
+                                    {reward.eligible ? "✅ Goal Achieved!" : `Almost there, $${reward.remainingAmount.toLocaleString()} more to go`}
+                                </p>
+                            </>
+                        ) : (
+                            <p className="small mb-0 text-success fw-bold">
+                                ✨ Included with Card Membership
+                            </p>
+                        )}
                     </div>
                 )}
             </div>
