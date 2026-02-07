@@ -26,20 +26,26 @@ const BenefitsList: React.FC<BenefitsListProps> = ({ userCardId }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!userCardId) return;
-        setLoading(true);
+        if (!userCardId || userCardId === "{userCardId}") return;
 
+        setLoading(true);
         fetch(`${backendUrl}/usercreditcard/{userCardId}`)
             .then(res => res.json())
             .then(data => {
+                if (Array.isArray(data)) {
                 setRewards(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error("Error fetching rewards:", err);
-                setLoading(false);
-            });
-    }, [userCardId]);
+            } else {
+                console.error("error", data);
+                setRewards([]); 
+            }
+            setLoading(false);
+        })
+        .catch((err) => {
+            console.error("Fetch error:", err);
+            setRewards([]);
+            setLoading(false);
+        });
+}, [userCardId]);
 
     if (loading) return <div className="text-center p-5 text-muted">Calculating rewards...</div>;
 
