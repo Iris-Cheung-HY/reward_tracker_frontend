@@ -55,7 +55,7 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                             <span className="text-muted small">
                                 {(isFreeNight && reward.totalAmount <= 1)
                                     ? "Yearly Cardmember Perk"
-                                    : `Goal: Spend $${reward.totalAmount?.toLocaleString()} for a Cat 1-4 Free Night`
+                                    : null
                                 }
                             </span>
                         </div>
