@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './CardDetail.css';
@@ -10,23 +10,23 @@ import BenefitsList from '../components/BenefitsList';
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 interface BankCreditCard {
-    id: number;
-    cardImage: string;
-    cardName: string;
+id: number;
+cardImage: string;
+cardName: string;
 }
 
 interface UserCard {
-    id: number;
-    lastFourDigits: string;
-    openMonth: number;
-    bankCreditCard: BankCreditCard;
+id: number;
+lastFourDigits: string;
+openMonth: number;
+bankCreditCard: BankCreditCard;
 }
 
 interface TransactionDetail {
-    date: string;
-    category: string;
-    amount: number;
-    description: string;
+date: string;
+category: string;
+amount: number;
+description: string;
 }
 
 const CardDetail: React.FC = () => {
@@ -35,11 +35,16 @@ const CardDetail: React.FC = () => {
     const [userId, setUserId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    const triggerRefresh = () => {
+        setRefreshKey(prev => prev + 1);
+    };
 
     const handleDeleteTransaction = async (id: number) => {
         try {
             await axios.delete(`${backendUrl}/transactionrecords/${id}`);
-            window.location.reload();
+            triggerRefresh(); 
         } catch (error) {
             console.error("Delete failed:", error);
         }
@@ -53,13 +58,13 @@ const CardDetail: React.FC = () => {
                 formData
             );
             setIsModalOpen(false);
-            window.location.reload(); 
+            triggerRefresh(); 
         } catch (error) {
             console.error("Failed to add transaction:", error);
         }
     };
 
-    const fetchUserSpecificCards = async (id: number) => {
+    const fetchUserSpecificCards = useCallback(async (id: number) => {
         try {
             setIsLoading(true);
             const res = await axios.get(`${backendUrl}/usercreditcard/${id}`);
@@ -69,7 +74,7 @@ const CardDetail: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -78,8 +83,7 @@ const CardDetail: React.FC = () => {
             setUserId(user.id);
             fetchUserSpecificCards(Number(cardId));
         }
-    }, [cardId]);
-
+    }, [cardId, fetchUserSpecificCards]);
 
     return (
         <div className="card-details-page">
@@ -99,6 +103,7 @@ const CardDetail: React.FC = () => {
                 <div className="transaction-mini-log">
                     {userId && cardId && (
                         <TransactionList 
+                            key={`transactions-${refreshKey}`} 
                             userId={userId} 
                             cardId={Number(cardId)}
                             onDelete={handleDeleteTransaction}
@@ -107,9 +112,10 @@ const CardDetail: React.FC = () => {
                     )}
                 </div>
             </div>
+
             {cardId && (
                 <div className="benefits-section-wrapper" style={{ marginTop: '2rem' }}>
-                    <BenefitsList userCardId={cardId} />
+                    <BenefitsList userCardId={cardId} key={`benefits-${refreshKey}`} />
                 </div>
             )}
             

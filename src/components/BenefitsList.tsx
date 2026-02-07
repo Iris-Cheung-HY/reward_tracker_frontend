@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Benefit from './Benefit';
 import './BenefitsList.css';
 
-
 export interface RewardsDTO {
     merchantType: string;
     rewardRate: number | null;
@@ -13,6 +12,7 @@ export interface RewardsDTO {
     type: string; 
     eligible: boolean;
     nextDueDate: string;
+    conditions: string | null;
 }
 
 interface BenefitsListProps {
@@ -23,37 +23,32 @@ const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 const BenefitsList: React.FC<BenefitsListProps> = ({ userCardId }) => {
     const [rewards, setRewards] = useState<RewardsDTO[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!userCardId) return;
-
         setLoading(true);
-        fetch(`${backendUrl}/bankrewards/card/${userCardId}/benefits`)
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to fetch rewards");
-                return res.json();
-            })
-            .then((data: RewardsDTO[]) => {
+
+        fetch(`${backendUrl}/usercreditcard/{userCardId}`)
+            .then(res => res.json())
+            .then(data => {
                 setRewards(data);
                 setLoading(false);
             })
-            .catch((err) => {
-                setError(err.message);
+            .catch(err => {
+                console.error("Error fetching rewards:", err);
                 setLoading(false);
             });
     }, [userCardId]);
 
-    if (loading) return <div className="p-4 text-center">Loading benefits...</div>;
-    if (error) return <div className="alert alert-danger m-4">{error}</div>;
+    if (loading) return <div className="text-center p-5 text-muted">Calculating rewards...</div>;
 
     return (
-        <div className="benefits-container px-3">
-            <h3 className="mb-4 fw-bold">Card Benefits & Tracking</h3>
+        <div className="benefits-container">
+            <h4 className="fw-bold mb-4">Benefit Progress</h4>
             <div className="row g-4">
                 {rewards.map((reward, index) => (
-                    <div className="col-12 col-md-6 col-lg-4" key={`${reward.merchantType}-${index}`}>
+                    <div className="col-12 col-md-6 col-lg-4" key={index}>
                         <Benefit reward={reward} />
                     </div>
                 ))}
