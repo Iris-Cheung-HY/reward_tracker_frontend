@@ -29,12 +29,14 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onDel
         try {
             setLoading(true);
             const res = await axios.get(`${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`);
+            console.log("dataJSON:", res.data);
             setTransactions(res.data);
         } catch (error) {
             console.error("Failed to fetch transactions:", error);
         } finally {
             setLoading(false);
         }
+
     };
 
     useEffect(() => {
