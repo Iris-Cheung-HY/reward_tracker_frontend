@@ -6,6 +6,8 @@ import axios from 'axios';
 import Forum from './pages/Forum';
 import Summary from './pages/Summary';
 import CardDetail from './pages/CardDetail';
+import Post from './components/Post'
+import NewPostForm from './components/NewPostForm';
 
 
 const App: React.FC = () => {
@@ -16,6 +18,8 @@ const App: React.FC = () => {
         <Navbar/>
         <Routes>
           <Route path ="/" element={<Forum />} />
+          <Route path="/posts/new" element={<NewPostForm />} />
+          <Route path="/posts/:id" element={<Post />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/card/:cardId" element={<CardDetail />} />
         </Routes>

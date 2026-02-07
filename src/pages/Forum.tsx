@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import FeaturedPost from '../components/FeaturedPost';
+import PostList from '../components/PostList';
 import type { FrontendPost } from '../types/PostType';
 
-const VITE_APP_BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
+const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 const Forum: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<FrontendPost[]>([]);
@@ -11,13 +12,16 @@ const Forum: React.FC = () => {
   const [creditCardPosts, setCreditCardPosts] = useState<FrontendPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const savedUser = localStorage.getItem('user');
+  const isLoggedIn = !!savedUser;
+
   useEffect(() => {
     const loadAllData = async () => {
       setIsLoading(true);
       const fetchPosts = async (endpoint: string) => {
         try {
-          const response = await axios.get(`${VITE_APP_BACKEND_URL}${endpoint}`);
-          return response.data.content || [];
+          const response = await axios.get(`${backendUrl}${endpoint}`);
+          return response.data.content || response.data || [];
         } catch (error) {
           console.error(error);
           return [];
@@ -29,6 +33,7 @@ const Forum: React.FC = () => {
         fetchPosts('/posts/travel-preview'),
         fetchPosts('/posts/creditcard-preview')
       ]);
+
       setFeaturedPosts(featured);
       setTravelPosts(travel);
       setCreditCardPosts(credit);
@@ -40,37 +45,30 @@ const Forum: React.FC = () => {
   if (isLoading) return <div className="text-center mt-5">Loading posts...</div>;
 
   return (
-    <div className="all-session" style={{ marginTop: '80px' }}>
-        <div className="feature-post-session">
-            <h1>Featured Posts</h1>
-            <FeaturedPost posts={featuredPosts} />
-        </div>
+    <div className="container" style={{ marginTop: '100px' }}>
+      <section className="feature-post-session mb-5">
+        <h1 className="mb-4">Featured Posts</h1>
+        <FeaturedPost posts={featuredPosts} />
+      </section>
 
-        <div className="sub-session">
-            <div className="travel-post-container">
-                <h1>Travel</h1>
-                <button>+</button>
-                {travelPosts.length > 0 ? (
-                  travelPosts.map((post) => (
-                    <div key={post.id}>
-                      <ul>{post.title}</ul>
-                    </div>
-                  ))
-                ) : <p>No travel posts found.</p>}
-            </div>
-
-            <div className="credit-card-post-container">
-                <h1>Credit Card</h1>
-                <button>+</button>
-                {creditCardPosts.length > 0 ? (
-                  creditCardPosts.map((post) => (
-                    <div key={post.id}>
-                      <ul>{post.title}</ul>
-                    </div>
-                  ))
-                ) : <p>No credit card posts found.</p>}
-            </div>
+      <section className="sub-session row">
+        <div className="col-md-6">
+          <PostList 
+            title="Travel" 
+            posts={travelPosts} 
+            categoryKey="Travel" 
+            isLoggedIn={isLoggedIn} 
+          />
         </div>
+        <div className="col-md-6">
+          <PostList 
+            title="Credit Card" 
+            posts={creditCardPosts} 
+            categoryKey="Credit Card" 
+            isLoggedIn={isLoggedIn} 
+          />
+        </div>
+      </section>
     </div>
   );
 };
