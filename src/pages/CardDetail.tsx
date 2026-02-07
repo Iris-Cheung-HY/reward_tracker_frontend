@@ -51,20 +51,32 @@ const CardDetail: React.FC = () => {
         }
     };
 
-    const handleAddTransactionSubmit = async (formData: TransactionDetail) => {
+    const handleAddTransactionSubmit = async (formData: any) => {
         try {
             if (!userId || !cardId) return;
-            await axios.post(
+
+            const payload = {
+                date: formData.date,
+                amount: formData.amount,
+                description: formData.description,
+                merchantType: formData.category || formData.merchantType // 確保發送 merchantType
+            };
+
+            console.log("Payload:", payload);
+
+            const response = await axios.post(
                 `${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`, 
-                formData
+                payload
             );
+
+            console.log("res:", response.data);
+
             setIsModalOpen(false);
             triggerRefresh(); 
         } catch (error) {
-            console.error("Failed to add transaction:", error);
+            console.error("error:", error);
         }
     };
-
     const fetchUserSpecificCards = useCallback(async (id: number) => {
         try {
             setIsLoading(true);
