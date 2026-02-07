@@ -29,7 +29,7 @@ const BenefitsList: React.FC<BenefitsListProps> = ({ userCardId }) => {
         if (!userCardId || userCardId === "{userCardId}") return;
 
         setLoading(true);
-        fetch(`${backendUrl}//usercreditcard/${userCardId}`)
+        fetch(`${backendUrl}/usercreditcard/${userCardId}`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
