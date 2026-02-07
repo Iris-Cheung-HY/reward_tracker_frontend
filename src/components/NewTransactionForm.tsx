@@ -15,7 +15,7 @@ type RewardInfo = {
 
 type NewTransactionFormData = {
     date: string;
-    category: string;
+    merchantType: string;
     amount: number | string;
     description: string;
 }
@@ -28,7 +28,7 @@ type NewTransactionFormProps = {
 const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, cardId }) => {
     const [formData, setFormData] = useState<NewTransactionFormData>({
         date: new Date().toISOString().split('T')[0] || "", 
-        category: '',
+        merchantType: '',
         amount: '',
         description: '',
     });
@@ -76,7 +76,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (!formData.date || !formData.category || !formData.amount || !formData.description) {
+        if (!formData.date || !formData.merchantType || !formData.amount || !formData.description) {
             setErrMsg('Please fill out all fields');
             return;
         }
@@ -114,7 +114,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                     <select 
                         name="category" 
                         className="form-select"
-                        value={formData.category} 
+                        value={formData.merchantType} 
                         onChange={handleInputChange}
                         required
                         disabled={loading}

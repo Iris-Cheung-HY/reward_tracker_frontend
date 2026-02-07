@@ -37,6 +37,7 @@ const CardDetail: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
 
+
     const triggerRefresh = () => {
         setRefreshKey(prev => prev + 1);
     };
