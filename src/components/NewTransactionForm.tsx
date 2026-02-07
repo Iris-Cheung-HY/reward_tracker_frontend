@@ -112,7 +112,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                 <div className="form-group mb-3">
                     <label className="form-label">Category</label>
                     <select 
-                        name="category" 
+                        name="merchantType" 
                         className="form-select"
                         value={formData.merchantType} 
                         onChange={handleInputChange}
