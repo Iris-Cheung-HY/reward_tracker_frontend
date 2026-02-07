@@ -22,12 +22,14 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                     <span className="text-uppercase text-muted fw-bold x-small tracking-wider">
                         {reward.merchantType}
                     </span>
-                    {reward.conditions && (
-                        <span className="text-info" title={reward.conditions} style={{ cursor: 'help' }}>
-                             ℹ️
-                             {reward.conditions}
-                        </span>
-                    )}
+                        {reward.conditions && (
+                            <div className="tooltip-container">
+                                <span className="info-icon">ℹ️</span>
+                                <div className="tooltip-text">
+                                    {reward.conditions}
+                                </div>
+                            </div>
+                        )}
                 </div>
 
                 {isPoints && (
@@ -44,7 +46,7 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                     <div className="progress-content">
                         <div className="d-flex justify-content-between align-items-end mb-1">
                             <h3 className="fw-bold mb-0">
-                                {isFreeNight ? `${reward.usedAmount.toFixed(0)} / $${reward.totalAmount}` : `$${reward.usedAmount.toFixed(0)}`}
+                                {isFreeNight ? `$${reward.usedAmount.toFixed(0)} / $${reward.totalAmount}` : `$${reward.usedAmount.toFixed(0)}`}
                             </h3>
                             <span className="text-muted small">Goal: ${reward.totalAmount?.toLocaleString()}</span>
                         </div>
