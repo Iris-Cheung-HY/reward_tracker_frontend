@@ -67,6 +67,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
+        console.log(`check: ${name}, val: ${value}`);
         setFormData(prev => ({ 
             ...prev, 
             [name]: value 
