@@ -85,7 +85,7 @@ const NewPostForm: React.FC = () => {
 
             const newPost = res.data
             if (newPost && newPost.id) {
-                navigate('/posts/${newPost.id}')
+                navigate(`/posts/${newPost.id}`)
             } else {
                 navigate('/forum')
             }
