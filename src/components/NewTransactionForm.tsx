@@ -41,7 +41,7 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
             try {
                 setLoading(true);
                 const res = await axios.get(`${backendUrl}/bankrewards/card/${cardId}/benefits`);
-                const spendRules = res.data.filter((r: any) => r.type === 'POINTS');
+                const spendRules = res.data.filter((r: any) => (r.type === 'POINTS' || r.type === 'CREDIT') && r.merchantType !== 'ANNIVERSARY');
                 setCardRules(spendRules);
             } catch (error) {
                 console.error("Fetch card categories failed:", error);
@@ -96,13 +96,13 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                             required
                             disabled={loading}
                         >
-                            <option value="">-- Choose Bonus Category --</option>
+                            <option value="">-- Choose Category --</option>
                             {cardRules.map(rule => (
                                 <option key={rule.merchantType} value={rule.merchantType}>
                                     {rule.merchantType} ({rule.rewardRate}x)
                                 </option>
                             ))}
-                            <option value="CUSTOM_OTHER" className="text-muted fw-bold">+ Add Others (1x)</option>
+                            <option value="CUSTOM_OTHER" className="text-muted fw-bold">Add Custom Category</option>
                         </select>
                     ) : (
                         <div className="input-group shadow-sm">
@@ -143,15 +143,15 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                 </div>
 
                 <div className="form-group mb-4">
-                    <label className="form-label fw-bold text-secondary small text-uppercase">Merchant Name</label>
+                    <label className="form-label fw-bold text-secondary small text-uppercase">Description</label>
                     <input
                         name="description"
                         type="text"
-                        placeholder={selectedRule?.conditions ? `e.g. ${selectedRule.merchantType} transaction` : "Where did you spend?"}
-                        className="form-control shadow-sm"
-                        value={formData.description}
-                        onChange={handleInputChange}
-                        required
+                    placeholder={selectedRule?.conditions ? selectedRule.conditions : "Description"}
+                    className="form-control"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    required
                     />
                 </div>
             </div>
