@@ -59,10 +59,8 @@ const CardDetail: React.FC = () => {
                 date: formData.date,
                 amount: formData.amount,
                 description: formData.description,
-                merchantType: formData.category || formData.merchantType // 確保發送 merchantType
+                merchantType: formData.category || formData.merchantType
             };
-
-            console.log("Payload:", payload);
 
             const response = await axios.post(
                 `${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`, 

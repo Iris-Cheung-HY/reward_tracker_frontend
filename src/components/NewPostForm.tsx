@@ -22,7 +22,7 @@ const NewPostForm: React.FC = () => {
             if (imageFile) {
                 const formData = new FormData();
                 formData.append('file', imageFile);
-                formData.append('upload_preset', 'named_present');
+                formData.append('upload_preset', 'reward_tracker');
                 
                 const cloudRes = await axios.post(
                     `https://api.cloudinary.com/v1_1/dpfccbrwk/image/upload`,
