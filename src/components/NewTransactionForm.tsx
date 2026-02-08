@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 type RewardInfo = {
-    id: number;
     merchantType: string;
     rewardRate: number | null;
+    conditions: string | null;
     type: string;
-    conditions: string;
-    totalAmount: number | null;
 };
 
 type NewTransactionFormData = {
@@ -33,119 +30,117 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
         description: '',
     });
 
-    const [rewards, setRewards] = useState<string[]>([]);
+    const [cardRules, setCardRules] = useState<RewardInfo[]>([]);
+    const [isCustomCategory, setIsCustomCategory] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [errMsg, setErrMsg] = useState('');
 
-
     useEffect(() => {
-            const fetchCategories = async () => {
-                try {
-                    setLoading(true);
-                    const res = await axios.get(`${backendUrl}/bankrewards/categories`);
-                    if (res.data && res.data.length > 0) {
-                        if (typeof res.data[0] === 'object') {
-                            const categoryNames = res.data.map((item: any) => item.merchantType || item.category);
-                            setRewards(categoryNames);
-                        } else {
-                            setRewards(res.data);
-                        }
-                    } 
-                } catch (error) {
-                    console.error("Fetch categories failed:", error);
-                    setErrMsg("Failed to load categories.");
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            if (cardId) {
-                fetchCategories();
+        const fetchCardBenefits = async () => {
+            try {
+                setLoading(true);
+                const res = await axios.get(`${backendUrl}/bankrewards/card/${cardId}/benefits`);
+                const spendRules = res.data.filter((r: any) => r.type === 'POINTS');
+                setCardRules(spendRules);
+            } catch (error) {
+                console.error("Fetch card benefits failed:", error);
+                setErrMsg("Failed to load card categories.");
+            } finally {
+                setLoading(false);
             }
-        }, [cardId]);
+        };
+        if (cardId) fetchCardBenefits();
+    }, [cardId]);
 
+    const selectedRule = cardRules.find(r => r.merchantType === formData.merchantType);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
-        setFormData(prev => ({ 
-            ...prev, 
-            [name]: value 
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-
         if (!formData.date || !formData.merchantType || !formData.amount || !formData.description) {
             setErrMsg('Please fill out all fields');
             return;
         }
-
-        if (Number(formData.amount) <= 0) {
-            setErrMsg('Please enter a positive amount');
-            return;
-        }
-
         setErrMsg('');
-        
-        onFormSubmit({
-            ...formData,
-            amount: Number(formData.amount)
-        });
+        onFormSubmit({ ...formData, amount: Number(formData.amount) });
     };
 
     return (
         <form onSubmit={handleSubmit} className="transaction-form">
             <div className="form-body">
                 <div className="form-group mb-3">
-                    <label className="form-label">Date</label>
-                    <input
-                        name="date"
-                        type="date"
-                        className="form-control"
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <label className="form-label fw-bold">Date</label>
+                    <input name="date" type="date" className="form-control" value={formData.date} onChange={handleInputChange} required />
                 </div>
 
                 <div className="form-group mb-3">
-                    <label className="form-label">Category</label>
-                    <select 
-                        name="merchantType" 
-                        className="form-select"
-                        value={formData.merchantType} 
-                        onChange={handleInputChange}
-                        required
-                        disabled={loading}
-                    >
-                        <option value="">-- {loading ? "Loding" : "Select Category"} --</option>
-                        {rewards.map(rew => (
-                            <option key={rew} value={rew}>{rew}</option>
-                        ))}
-                    </select>
+                    <label className="form-label fw-bold">Category</label>
+                    {!isCustomCategory ? (
+                        <select 
+                            name="merchantType" 
+                            className="form-select border-primary"
+                            value={formData.merchantType} 
+                            onChange={(e) => {
+                                if (e.target.value === "CUSTOM_OTHER") {
+                                    setIsCustomCategory(true);
+                                    setFormData(prev => ({ ...prev, merchantType: '' }));
+                                } else {
+                                    handleInputChange(e);
+                                }
+                            }}
+                            required
+                            disabled={loading}
+                        >
+                            <option value="">-- Select Bonus Category --</option>
+                            {cardRules.map(rule => (
+                                <option key={rule.merchantType} value={rule.merchantType}>
+                                    {rule.merchantType} ({rule.rewardRate}x)
+                                </option>
+                            ))}
+                            <option value="CUSTOM_OTHER">+ Other / General Spend</option>
+                        </select>
+                    ) : (
+                        <div className="input-group">
+                            <input 
+                                name="merchantType"
+                                className="form-control" 
+                                placeholder="Enter category (e.g. Hospital)"
+                                value={formData.merchantType}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <button className="btn btn-outline-secondary" type="button" onClick={() => setIsCustomCategory(false)}>
+                                Back to List
+                            </button>
+                        </div>
+                    )}
+                    
+                    {selectedRule?.conditions && (
+                        <div className="form-text text-muted mt-2 small">
+                            <i className="bi bi-info-circle me-1"></i>
+                            <strong>Note:</strong> {selectedRule.conditions}
+                        </div>
+                    )}
                 </div>
 
                 <div className="form-group mb-3">
-                    <label className="form-label">Amount</label>
-                    <input
-                        name="amount"
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
-                        className="form-control"
-                        value={formData.amount}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <label className="form-label fw-bold">Amount</label>
+                    <div className="input-group">
+                        <span className="input-group-text">$</span>
+                        <input name="amount" type="number" step="0.01" className="form-control" placeholder="0.00" value={formData.amount} onChange={handleInputChange} required />
+                    </div>
                 </div>
 
-                <div className="form-group mb-3">
-                    <label className="form-label">Description</label>
+                <div className="form-group mb-4">
+                    <label className="form-label fw-bold">Merchant / Description</label>
                     <input
                         name="description"
                         type="text"
-                        placeholder="Description"
+                        placeholder="e.g. Starbucks, Delta Airlines..."
                         className="form-control"
                         value={formData.description}
                         onChange={handleInputChange}
@@ -156,11 +151,9 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
 
             {errMsg && <div className="alert alert-danger py-2">{errMsg}</div>}
 
-            <div className="form-footer mt-4">
-                <button className="btn btn-primary w-100" type="submit" disabled={loading}>
-                    Add Transaction
-                </button>
-            </div>
+            <button className="btn btn-primary w-100 py-2 fw-bold" type="submit" disabled={loading}>
+                {loading ? "Loading..." : "Add Transaction"}
+            </button>
         </form>
     );
 };
