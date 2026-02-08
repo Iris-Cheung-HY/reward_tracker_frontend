@@ -87,29 +87,31 @@ const Summary: React.FC = () => {
     }
 
     return (
-        <div className="summary-page">
-            <header className="summary-header">
-                <h1>My Wallet Dashboard</h1>
+        <div className="container py-5">
+            <header className="mb-5 text-center">
+                <h1 className="fw-bold display-5">My Wallet Dashboard</h1>
             </header>
 
-            <div className="summary-stats-container">
-                <div className="annual-fee-item">
+            <div className="row g-4 mb-5">
+                <div className="col-md-6">
                     <AnnualFeeTotal />
                 </div>
-                <div className="transaction-summary-item">
+                <div className="col-md-6">
                     <SummaryTransaction />
                 </div>
             </div>
 
-        <section className="cards-section">
-                    <h2>My Credit Cards</h2>
-                    <CardList 
-                        cards={cards} 
-                        onDelete={handleDeleteCard} 
-                        onAdd={() => setIsModalOpen(true)}
-                        onCardClick={handleCardClick} 
-                    />
-                </section>
+            <section className="cards-section">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className="fw-bold">My Credit Cards</h2>
+                </div>
+                <CardList 
+                    cards={cards} 
+                    onDelete={handleDeleteCard} 
+                    onAdd={() => setIsModalOpen(true)}
+                    onCardClick={handleCardClick} 
+                />
+            </section>
 
                 {isModalOpen && (
                     <AddCardModal
