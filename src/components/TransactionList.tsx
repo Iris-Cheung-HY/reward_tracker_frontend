@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Transaction from './Transaction';
-import './CardList.css';
 import axios from 'axios';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;

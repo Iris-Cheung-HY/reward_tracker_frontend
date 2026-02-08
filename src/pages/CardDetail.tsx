@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import './CardDetail.css';
 import Card from '../components/Card';
 import TransactionList from '../components/TransactionList';
 import AddTransactionModal from '../components/AddTransactionModal';

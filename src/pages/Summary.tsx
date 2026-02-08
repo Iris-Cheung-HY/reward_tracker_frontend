@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Summary.css';
 import AnnualFeeTotal from '../components/AnnualFeeTotal';
 import SummaryTransaction from '../components/SummaryTransaction';
 import NewCardForm from '../components/NewCardForm';

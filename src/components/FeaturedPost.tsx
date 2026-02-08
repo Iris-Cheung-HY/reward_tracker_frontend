@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import type { FrontendPost } from '../types/PostType';
-import './FeaturedPost.css';
 
 interface Props {
   posts: FrontendPost[];

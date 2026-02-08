@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './AddCardModalSummary.css';
 import NewCardForm from './NewCardForm';
 
 

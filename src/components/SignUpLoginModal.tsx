@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import './SignUpLoginModal.css';
 import NewUserForm from './NewUserForm';
 import LoginForm from './LoginForm';
 

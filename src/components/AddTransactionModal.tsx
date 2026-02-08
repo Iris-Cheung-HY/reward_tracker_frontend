@@ -1,5 +1,4 @@
 import React from 'react';
-import './AddTransactionModal.css';
 import NewTransactionForm from './NewTransactionForm';
 
 type AddTransactionModalProps = {
