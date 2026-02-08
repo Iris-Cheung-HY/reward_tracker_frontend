@@ -20,9 +20,10 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
         <div className={`card h-100 shadow-sm border-0 position-relative ${reward.eligible ? 'border-start border-success border-5' : 'border-start border-light border-5'}`} style={{ borderRadius: '12px' }}>
             <div className="card-body d-flex flex-column">
                 
-                <div className="d-flex justify-content-between align-items-start mb-3">
+
+                <div className="d-flex justify-content-between align-items-start mb-2">
                     <div className="flex-grow-1">
-                        <span className="text-uppercase text-primary fw-bold small ls-wide">
+                        <span className="text-uppercase text-muted fw-bold small ls-wide" style={{ fontSize: '0.7rem' }}>
                             {reward.merchantType.replace(/_/g, ' ')}
                         </span>
                         {reward.conditions && (
@@ -40,42 +41,44 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                             placement="top"
                             overlay={<Tooltip id={`tooltip-${reward.merchantType}`}>{reward.conditions}</Tooltip>}
                         >
-                            <span className="badge rounded-pill bg-light text-dark border ms-2" style={{ cursor: 'help' }}>?</span>
+                            <span className="text-secondary ms-2" style={{ cursor: 'help', fontSize: '0.9rem' }}>ℹ️</span>
                         </OverlayTrigger>
                     )}
                 </div>
 
-                <div className="flex-grow-1 py-2">
+                <div className="flex-grow-1 py-1">
                     {isPoints ? (
+
                         <div className="points-info">
                             <div className="d-flex align-items-baseline gap-1">
-                                <h2 className="fw-bold text-dark mb-0">{reward.usedAmount.toLocaleString()}</h2>
-                                <span className="text-muted small fw-medium">Points</span>
+                                <h2 className="fw-bold text-primary mb-0">{reward.usedAmount.toLocaleString()}</h2>
+                                <span className="text-primary small fw-bold">Pts</span>
                             </div>
-                            <div className="mt-2">
-                                <span className="badge bg-primary-subtle text-primary border border-primary-subtle">
-                                    Earn Rate: {reward.rewardRate}x
+                            <div className="mt-1">
+                                <span className="badge bg-light text-secondary border small">
+                                    {reward.rewardRate}x Multiplier
                                 </span>
                             </div>
                         </div>
                     ) : (
+
                         <div className="credit-info">
                             <div className="d-flex justify-content-between align-items-end mb-1">
-                                <h3 className="fw-bold mb-0">
+                                <h3 className="fw-bold mb-0" style={{ fontSize: '1.4rem' }}>
                                     {isFreeNight && reward.totalAmount! <= 1 
-                                        ? "1 Night" 
+                                        ? "Anniversary Gift" 
                                         : `$${reward.usedAmount.toFixed(0)}`
                                     }
                                     {hasLimit && <span className="text-muted fs-6 fw-normal"> / ${reward.totalAmount}</span>}
                                 </h3>
-                                {reward.eligible && <span className="text-success small fw-bold">✓ Ready</span>}
+                                {reward.eligible && <span className="text-success x-small fw-bold">✓ Ready</span>}
                             </div>
 
                             {hasLimit && (
-                                <div className="progress mt-2" style={{ height: '8px', backgroundColor: '#f0f0f0' }}>
+                                <div className="progress mt-2" style={{ height: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
                                     <div 
                                         className={`progress-bar ${reward.eligible ? 'bg-success' : 'bg-info'} progress-bar-striped`} 
-                                        style={{ width: `${progressPercent}%`, borderRadius: '4px' }}
+                                        style={{ width: `${progressPercent}%` }}
                                     />
                                 </div>
                             )}
@@ -84,8 +87,8 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                 </div>
 
                 {reward.nextDueDate && (
-                    <div className="mt-3 pt-2 border-top border-light d-flex align-items-center text-muted" style={{ fontSize: '0.75rem' }}>
-                        <i className="bi bi-clock-history me-1"></i>
+                    <div className="mt-auto pt-2 border-top border-light d-flex align-items-center text-muted" style={{ fontSize: '0.7rem' }}>
+                        <i className="bi bi-calendar-check me-1"></i>
                         <span>Resets: <strong>{new Date(reward.nextDueDate).toLocaleDateString()}</strong></span>
                     </div>
                 )}
