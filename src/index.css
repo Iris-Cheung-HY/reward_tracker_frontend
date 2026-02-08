@@ -1,0 +1,16 @@
+
+.x-small {
+    font-size: 0.7rem !important;
+}
+
+.ls-wide {
+    letter-spacing: 0.05rem;
+}
+
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
