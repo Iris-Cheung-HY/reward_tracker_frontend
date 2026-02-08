@@ -17,6 +17,7 @@ const NewPostForm: React.FC = () => {
     const [postFormData, setPostFormData] = useState(kDefaultPostForm);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [posts, setPosts] = useState([]);
     
     const [disableSubmit, setDisableSubmit] = useState(true);
     const [errMsg, setErrMsg] = useState('Message cannot be empty!');
@@ -51,6 +52,9 @@ const NewPostForm: React.FC = () => {
         e.preventDefault();
         setIsUploading(true);
 
+
+        setPostFormData(kDefaultPostForm);
+
         try {
             let imageUrl = "";
 
@@ -75,11 +79,16 @@ const NewPostForm: React.FC = () => {
                 user_id: currentUserId
             };
 
-            await axios.post(`${backendUrl}/posts`, postData);
+            const res = await axios.post(`${backendUrl}/posts`, postData);
 
             alert("Post Success！");
-            setPostFormData(kDefaultPostForm);
-            navigate('/forum');
+
+            const newPost = res.data
+            if (newPost && newPost.id) {
+                navigate('/posts/${newPost.id}')
+            } else {
+                navigate('/forum')
+            }
         } catch (error) {
             console.error(error);
             alert("Please try again later!");
