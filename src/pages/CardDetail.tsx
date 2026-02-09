@@ -164,7 +164,6 @@ const CardDetail: React.FC = () => {
                 <div className="col-12">
                     <div className="card border-0 shadow-sm rounded-4 bg-light p-4">
                         <div className="d-flex align-items-center gap-2 mb-4 border-bottom pb-3">
-                            <i className="bi bi-stars text-warning fs-3"></i>
                         </div>
                         {cardId && (
                             <BenefitsList userCardId={cardId} key={`benefits-${refreshKey}`} />
