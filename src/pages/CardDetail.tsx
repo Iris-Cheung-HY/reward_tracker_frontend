@@ -12,6 +12,7 @@ interface BankCreditCard {
 id: number;
 cardImage: string;
 cardName: string;
+annualFee: number | string;
 }
 
 interface UserCard {
@@ -95,39 +96,83 @@ const CardDetail: React.FC = () => {
         }
     }, [cardId, fetchUserSpecificCards]);
 
+
     return (
-        <div className="card-details-page">
-            <div className="top-section">
-                <div className="card-visual">
-                    {cardData && (
-                        <Card 
-                            id={cardData.id}
-                            image={cardData.bankCreditCard.cardImage} 
-                            lastFourDigits={cardData.lastFourDigits}
-                            openMonth={String(cardData.openMonth)}
-                            onDelete={() => {}}
-                        />
-                    )}
+        <div className="container py-5 mt-5">
+            
+            <div className="row g-5 align-items-start">
+                
+                <div className="col-lg-4">
+                    <div className="sticky-top" style={{ top: '100px' }}>
+                        <div className="mb-4">
+                            <h2 className="fw-bold text-dark">{cardData?.bankCreditCard.cardName}</h2>
+                            <span className="badge bg-primary-subtle text-primary rounded-pill px-3">Active Card</span>
+                        </div>
+
+                        <div className="shadow-lg rounded-4 overflow-hidden">
+                            {cardData && (
+                                <Card 
+                                    id={cardData.id}
+                                    image={cardData.bankCreditCard.cardImage} 
+                                    lastFourDigits={cardData.lastFourDigits}
+                                    openMonth={String(cardData.openMonth)}
+                                    onDelete={() => {}} 
+                                />
+                            )}
+                        </div>
+
+                        <div className="mt-4 row g-2">
+                            <div className="col-6">
+                                <div className="p-3 bg-white border rounded-3 shadow-sm">
+                                    <small className="text-muted d-block fw-bold">ANNUAL FEE</small>
+                                    <span className="h5 fw-bold text-danger">${cardData?.bankCreditCard.annualFee}</span>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <div className="p-3 bg-white border rounded-3 shadow-sm">
+                                    <small className="text-muted d-block fw-bold">LAST 4</small>
+                                    <span className="h5 fw-bold">{cardData?.lastFourDigits}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="transaction-mini-log">
-                    {userId && cardId && (
-                        <TransactionList 
-                            key={`transactions-${refreshKey}`} 
-                            userId={userId} 
-                            cardId={Number(cardId)}
-                            onDelete={handleDeleteTransaction}
-                            onAdd={() => setIsModalOpen(true)}
-                        />
-                    )}
+                <div className="col-lg-8">
+                    <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div className="card-header bg-white border-0 pt-4 px-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h4 className="fw-bold mb-0">Transaction History</h4>
+                            </div>
+                        </div>
+                        <div className="card-body p-4">
+                            {userId && cardId && (
+                                <TransactionList 
+                                    key={`transactions-${refreshKey}`} 
+                                    userId={userId} 
+                                    cardId={Number(cardId)}
+                                    onDelete={handleDeleteTransaction}
+                                    onAdd={() => setIsModalOpen(true)}
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {cardId && (
-                <div className="benefits-section-wrapper" style={{ marginTop: '2rem' }}>
-                    <BenefitsList userCardId={cardId} key={`benefits-${refreshKey}`} />
+            <div className="row mt-5">
+                <div className="col-12">
+                    <div className="card border-0 shadow-sm rounded-4 bg-light p-4">
+                        <div className="d-flex align-items-center gap-2 mb-4 border-bottom pb-3">
+                            <i className="bi bi-stars text-warning fs-3"></i>
+                            <h3 className="fw-bold mb-0">Benefits & Milestones</h3>
+                        </div>
+                        {cardId && (
+                            <BenefitsList userCardId={cardId} key={`benefits-${refreshKey}`} />
+                        )}
+                    </div>
                 </div>
-            )}
+            </div>
             
             {isModalOpen && (
                 <AddTransactionModal 
