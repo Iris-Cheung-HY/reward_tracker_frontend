@@ -63,6 +63,7 @@ const Forum: React.FC = () => {
             isLoggedIn={isLoggedIn} 
             />
         </div>
+        
         <div className="col-lg-6">
             <PostList 
             title="Credit Card" 
