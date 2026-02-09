@@ -36,16 +36,12 @@ const TotalTransactionTotal: React.FC = () => {
     }, []);
 
     return (
-        <div className="summary-trans trans">
-            <div className="trans-header">
-                <h3>Total Transactions</h3>
-            </div>
-            <div className="trans-body">
-                <p className="amount">
-                    `${totalTransactionAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                </p>
-                <span className="period">as of {currentDate.toLocaleDateString()}</span>
-            </div>
+        <div className="card h-100 border-0 shadow-sm rounded-4 bg-white p-4 border-start border-primary border-5">
+            <h6 className="fw-bold">Total Spend</h6>
+            <h2 className="fw-bold mb-0 text-dark">
+                ${totalTransactionAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+            </h2>
+            <span className="text-muted small mt-2">as of {currentDate.toLocaleDateString()}</span>
         </div>
     );
 };
