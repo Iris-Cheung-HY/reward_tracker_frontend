@@ -12,6 +12,7 @@ export interface RewardsDTO {
     eligible: boolean;
     nextDueDate: string | null;
     conditions: string | null;
+    displayMode: 'STATIC' | 'PROGRESS';
 }
 
 interface BenefitsListProps {
