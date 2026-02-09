@@ -130,7 +130,7 @@ const CardDetail: React.FC = () => {
                             </div>
                             <div className="col-6">
                                 <div className="p-3 bg-white border rounded-3 shadow-sm">
-                                    <small className="text-muted d-block fw-bold">LAST 4</small>
+                                    <small className="text-muted d-block fw-bold">LAST 4 Digit</small>
                                     <span className="h5 fw-bold">{cardData?.lastFourDigits}</span>
                                 </div>
                             </div>
@@ -165,7 +165,6 @@ const CardDetail: React.FC = () => {
                     <div className="card border-0 shadow-sm rounded-4 bg-light p-4">
                         <div className="d-flex align-items-center gap-2 mb-4 border-bottom pb-3">
                             <i className="bi bi-stars text-warning fs-3"></i>
-                            <h3 className="fw-bold mb-0">Benefits & Milestones</h3>
                         </div>
                         {cardId && (
                             <BenefitsList userCardId={cardId} key={`benefits-${refreshKey}`} />
