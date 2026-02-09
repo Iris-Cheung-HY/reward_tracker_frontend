@@ -8,7 +8,7 @@ export interface RewardsDTO {
     usedAmount: number;
     remainingAmount: number;
     lostAmount: number;
-    type: string; 
+    type: 'POINTS' | 'CREDIT' | 'STATUS' | 'BENEFIT' | 'MILESTONE' | 'FREE_NIGHT';
     eligible: boolean;
     nextDueDate: string | null;
     conditions: string | null;

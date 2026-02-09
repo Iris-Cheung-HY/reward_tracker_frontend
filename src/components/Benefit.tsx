@@ -8,14 +8,23 @@ interface BenefitProps {
 
 const Benefit: React.FC<BenefitProps> = ({ reward }) => {
     const isPoints = reward.type === 'POINTS';
-    
     const isStatic = reward.displayMode === 'STATIC';
+    const isMilestone = reward.type === 'MILESTONE';
+    const isFreeNight = reward.type === 'FREE_NIGHT';
     
     const hasProgress = reward.totalAmount !== null && reward.totalAmount > 0;
     
     const progressPercent = hasProgress 
         ? Math.min((reward.usedAmount / (reward.totalAmount || 1)) * 100, 100)
         : 0;
+
+    const formatCurrency = (num: number) => 
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+
+    const getDisplayName = (type: string) => {
+        if (type === 'OTHERS') return 'All Other Spend';
+        return type.replace(/_/g, ' ');
+    };
 
     return (
         <div className={`card h-100 shadow-sm border-0 position-relative ${reward.eligible ? 'border-start border-success border-5' : 'border-start border-light border-5'}`} style={{ borderRadius: '12px' }}>
@@ -24,7 +33,7 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                 <div className="d-flex justify-content-between align-items-start mb-2">
                     <div className="flex-grow-1">
                         <span className="text-uppercase text-muted fw-bold small ls-wide" style={{ fontSize: '0.65rem' }}>
-                            {reward.merchantType.replace(/_/g, ' ')}
+                            {getDisplayName(reward.merchantType)}
                         </span>
                         {reward.conditions && (
                             <div className="text-muted x-small mt-1 fst-italic">
@@ -39,7 +48,7 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                     {reward.conditions && (
                         <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip id={`tooltip-${reward.merchantType}`}>{reward.conditions}</Tooltip>}
+                            overlay={<Tooltip id={`tooltip-${reward.id || reward.merchantType}`}>{reward.conditions}</Tooltip>}
                         >
                             <span className="text-secondary ms-2" style={{ cursor: 'help', fontSize: '0.85rem' }}>ℹ️</span>
                         </OverlayTrigger>
@@ -47,8 +56,6 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                 </div>
 
                 <div className="flex-grow-1 py-1 d-flex align-items-center">
-
-
                     {isPoints ? (
                         <div className="points-info w-100">
                             <div className="d-flex align-items-baseline gap-1">
@@ -74,15 +81,26 @@ const Benefit: React.FC<BenefitProps> = ({ reward }) => {
                         <div className="credit-info w-100">
                             <div className="d-flex justify-content-between align-items-end mb-1">
                                 <h3 className="fw-bold mb-0" style={{ fontSize: '1.2rem' }}>
-                                    {reward.type === 'FREE_NIGHT' ? "Free Night" : `$${reward.usedAmount.toFixed(0)}`}
-                                    <span className="text-muted fs-6 fw-normal"> / ${reward.totalAmount}</span>
+                                    {formatCurrency(reward.usedAmount)}
+                                    <span className="text-muted fs-6 fw-normal"> / {formatCurrency(reward.totalAmount || 0)}</span>
                                 </h3>
                                 {reward.eligible && <span className="text-success x-small fw-bold">✓ Ready</span>}
                             </div>
 
+                            {(isMilestone || isFreeNight) ? (
+                                <div className="text-info fw-bold mt-1" style={{ fontSize: '0.65rem', textTransform: 'uppercase' }}>
+                                    <i className="bi bi-trophy-fill me-1"></i>
+                                    Goal: {isFreeNight ? "Extra Free Night" : getDisplayName(reward.merchantType)}
+                                </div>
+                            ) : (
+                                <div className="text-muted mt-1" style={{ fontSize: '0.65rem', textTransform: 'uppercase' }}>
+                                    Current Spending Progress
+                                </div>
+                            )}
+
                             <div className="progress mt-2" style={{ height: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
                                 <div 
-                                    className={`progress-bar ${reward.eligible ? 'bg-success' : 'bg-primary'} progress-bar-striped`} 
+                                    className={`progress-bar ${reward.eligible ? 'bg-success' : (isMilestone ? 'bg-info' : 'bg-primary')} progress-bar-striped progress-bar-animated`} 
                                     style={{ width: `${progressPercent}%` }}
                                 />
                             </div>
