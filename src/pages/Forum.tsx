@@ -44,33 +44,36 @@ const Forum: React.FC = () => {
 
   if (isLoading) return <div className="text-center mt-5">Loading posts...</div>;
 
-  return (
-    <div className="container" style={{ marginTop: '100px' }}>
-      <section className="feature-post-session mb-5">
-        <h1 className="mb-4">Featured Posts</h1>
-        <FeaturedPost posts={featuredPosts} />
-      </section>
+    return (
 
-      <section className="sub-session row">
-        <div className="col-md-6">
-          <PostList 
+    <div className="container-fluid py-5" style={{ maxWidth: '1400px', marginTop: '80px' }}>
+        
+
+        <section className="mb-5 px-md-3">
+        <h2 className="fw-bold mb-4">Featured Posts</h2>
+        <FeaturedPost posts={featuredPosts} />
+        </section>
+
+        <div className="row g-4 px-md-3">
+        <div className="col-lg-6">
+            <PostList 
             title="Travel" 
             posts={travelPosts} 
             categoryKey="Travel" 
             isLoggedIn={isLoggedIn} 
-          />
+            />
         </div>
-        <div className="col-md-6">
-          <PostList 
+        <div className="col-lg-6">
+            <PostList 
             title="Credit Card" 
             posts={creditCardPosts} 
             categoryKey="Credit Card" 
             isLoggedIn={isLoggedIn} 
-          />
+            />
         </div>
-      </section>
+        </div>
     </div>
-  );
-};
+    );
+}
 
 export default Forum;
