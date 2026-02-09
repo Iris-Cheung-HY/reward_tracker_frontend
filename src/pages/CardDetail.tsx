@@ -142,7 +142,6 @@ const CardDetail: React.FC = () => {
                     <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
                         <div className="card-header bg-white border-0 pt-4 px-4">
                             <div className="d-flex justify-content-between align-items-center">
-                                <h4 className="fw-bold mb-0">Transaction History</h4>
                             </div>
                         </div>
                         <div className="card-body p-4">
