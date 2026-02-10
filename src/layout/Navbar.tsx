@@ -3,6 +3,7 @@ import './Navbar.css';
 import SignUpLoginModal from '../components/SignUpLoginModal';
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../public/image/";
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -79,7 +80,9 @@ return (
     <>
         <nav className="custom-navbar fixed-top">
             <div className="navbar-container">
-                <Link to="/" className="brand-logo">Reward Tracker</Link>
+                <Link to="/" className="brand-logo">
+                    <img src={logo} alt="Reward Tracker" className="logo-image" />
+                </Link>
 
                 <div className="nav-actions">
                     {user ? (
