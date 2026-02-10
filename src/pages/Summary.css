@@ -15,14 +15,15 @@
 }
 
 #summary-stats-banner {
-    display: flex;
+    display: flex;    
     justify-content: space-between;
     gap: 30px;
-    margin-bottom: 60px;
+    width: 100%;    
+    margin-bottom: 40px;
 }
 
 .stat-item-wrapper {
-    flex: 1;
+    flex: 1;          
     background: #ffffff;
     padding: 30px;
     border-radius: 20px;
