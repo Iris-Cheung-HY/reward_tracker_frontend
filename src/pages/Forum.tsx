@@ -23,22 +23,14 @@ const fetchPostsAPI = (endpoint: string) => {
   return axios.get(`${backendUrl}${endpoint}`)
     .then(response => {
       console.log(`>>> [DEBUG] Endpoint: ${endpoint}`);
-      console.log(`>>> [TYPE]:`, typeof response.data);
-      console.log(`>>> [DATA]:`, response.data); 
-
-      const postData = response.data;
-
-      if (postData && Array.isArray(postData)) {
-        return postData.map(convertPostFromAPI);
-      } 
       
-      if (postData && typeof postData === 'object') {
-        const nestedData = postData.posts || postData.data || [];
-        console.log(`>>> [NESTED DATA FOUND]:`, nestedData);
-        return nestedData.map(convertPostFromAPI);
-      }
+      const postArray = response.data && response.data.content 
+        ? response.data.content 
+        : [];
 
-      return [];
+      console.log(`>>> [SUCCESS] Found ${postArray.length} posts`);
+
+      return postArray.map(convertPostFromAPI);
     })
     .catch(error => {
       console.log(`>>> [ERROR] ${endpoint}:`, error);
