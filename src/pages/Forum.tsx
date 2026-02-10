@@ -22,6 +22,8 @@ const convertPostFromAPI = (apiData: any): FrontendPost => {
 const fetchPostsAPI = (endpoint: string) => {
   return axios.get(`${backendUrl}${endpoint}`)
     .then(response => {
+      console.log(`--- Debug: Data from ${endpoint} ---`);
+      console.log(response.data);
       const postData = response.data;
       return postData.map(convertPostFromAPI);
     })
