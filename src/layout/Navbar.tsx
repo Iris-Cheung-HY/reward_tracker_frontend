@@ -1,29 +1,15 @@
 import React, { useState } from "react";
-import './Navbar.css';
-import SignUpLoginModal from '../components/SignUpLoginModal';
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import './Navbar.css';
 import logo from "/image/logo.png";
+import SignUpLoginModal from '../components/SignUpLoginModal';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
-type NewUserFormData = {
-    username: string;
-    password: string;
-    name: string;
-    email: string;
-}
-
-type LoginFormData = {
-    username: string;
-    password: string;
-}
-
-interface User {
-    id: number;
-    username: string;
-    token?: string; 
-}
+type NewUserFormData = { username: string; password: string; name: string; email: string; }
+type LoginFormData = { username: string; password: string; }
+interface User { id: number; username: string; token?: string; }
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -40,79 +26,71 @@ export default function Navbar() {
         setSignUpLoginModal(false);
     };
 
-    const handleSignup = async (formData: NewUserFormData) => {
-        try {
-            const response = await axios.post(`${backendUrl}/users`, formData);
-            updateSession(response.data);
-            alert('Sign up Success!');
-        } catch (error: any) {
-            const errorMessage = error.response?.status === 409 
-                ? "Username or Email already exists!" 
-                : "Signup failed, please try again.";
-            alert(errorMessage);
-        }
+    const handleSignup = (formData: NewUserFormData) => {
+        axios.post(`${backendUrl}/users`, formData)
+            .then(response => {
+                updateSession(response.data);
+                alert('Sign up Success!');
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 
-    const handleSignin = async (formData: LoginFormData) => {
-        try {
-            const response = await axios.post(`${backendUrl}/users/login`, formData);
-            
-            if (response.data?.username) {
-                updateSession(response.data);
-                alert(`Welcome Back, ${response.data.username}!`);
-                navigate("/summary");
-            } else {
-                alert("Login failed: Invalid credentials");
-            }
-        } catch (error: any) {
-            alert("Login failed: Wrong credentials or server error");
-        }
+    const handleSignin = (formData: LoginFormData) => {
+        axios.post(`${backendUrl}/users/login`, formData)
+            .then(response => {
+                if (response.data.username) {
+                    updateSession(response.data);
+                    navigate("/summary");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Login failed!");
+            });
     };
 
     const handleLogout = () => {
         setUser(null);
         localStorage.removeItem('user');
-        alert("Logged out successfully");
         navigate("/");
     };
 
-return (
-    <>
-        <nav className="custom-navbar fixed-top">
-            <div className="navbar-container">
-                <Link to="/" className="brand-logo">
-                    <img src={logo} alt="Reward Tracker" className="logo-image" />
-                </Link>
+    return (
+        <>
+            <nav className="custom-navbar">
+                <div className="navbar-container">
+                    <Link to="/" className="brand-logo">
+                        <img src={logo} alt="Logo" className="logo-image" />
+                    </Link>
 
-                <div className="nav-actions">
-                    {user ? (
-                        <div className="user-menu">
-                            <Link className="nav-link" to="/">Forum</Link>
-                            <Link className="nav-link" to="/summary">My Wallet</Link>
-                            
-                            <div className="user-profile">
-                                <span className="welcome-text">Hi, {user.username}</span>
-                                <button className="logout-button" onClick={handleLogout}>
-                                    Logout
-                                </button>
+                    <div className="nav-actions">
+                        {user ? (
+                            <div className="user-menu">
+                                <Link className="nav-link" to="/">Forum</Link>
+                                <Link className="nav-link" to="/summary">My Wallet</Link>
+                                <div className="user-profile">
+                                    <span className="welcome-text">Hi, {user.username}</span>
+                                    <button className="logout-button" onClick={handleLogout}>Logout</button>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <button className="login-button" onClick={() => setSignUpLoginModal(true)}>
-                            Sign Up / Log In
-                        </button>
-                    )}
+                        ) : (
+                            <button className="login-button" onClick={() => setSignUpLoginModal(true)}>
+                                Sign Up / Log In
+                            </button>
+                        )}
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
 
-        {showSignUpLoginModal && (
-            <SignUpLoginModal
-                onSignupSubmit={handleSignup}
-                onSigninSubmit={handleSignin}
-                onClose={() => setSignUpLoginModal(false)}
-            />
-        )}
-    </>
+            {showSignUpLoginModal && (
+                <SignUpLoginModal
+                    onSignupSubmit={handleSignup}
+                    onSigninSubmit={handleSignin}
+                    onClose={() => setSignUpLoginModal(false)}
+                />
+            )}
+        </>
     );
 }
