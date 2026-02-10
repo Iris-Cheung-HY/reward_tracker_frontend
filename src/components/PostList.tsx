@@ -46,7 +46,11 @@ const PostList: React.FC<PostListProps> = ({ title, categoryKey, isLoggedIn, pos
             <div 
               key={post.id} 
               className="post-card" 
-              onClick={() => navigate(`/posts/${post.id}`)}
+              onClick={() => {
+                if(post.id) {
+                  navigate(`/posts/${post.id}`);
+                }
+              }}
             >
               <div className="post-card-top">
                 <span className="post-card-title">{post.title}</span>
