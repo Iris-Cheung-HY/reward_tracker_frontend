@@ -9,7 +9,7 @@ const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
 const convertPostFromAPI = (apiData: any): FrontendPost => {
   return {
-    id: apiData.id,
+    id: apiData.postId || apiData.id,
     title: apiData.title,
     body: apiData.body,
     imageUrl: apiData.imageUrl,

@@ -50,7 +50,7 @@ const PostDetail: React.FC = () => {
 
         if (!id || id === "undefined") {
             console.warn("Invalid ID detected in URL, redirecting...");
-            navigate('/forum'); 
+            navigate(-1); 
             return;
         }
 
