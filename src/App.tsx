@@ -14,6 +14,7 @@ const App: React.FC = () => {
 
   return (
     <>
+    <main className="maincontent">
       <Router>
         <Navbar/>
         <Routes>
@@ -24,6 +25,7 @@ const App: React.FC = () => {
           <Route path="/card/:cardId" element={<CardDetail />} />
         </Routes>
       </Router>
+    </main>
     </>
 
   );
