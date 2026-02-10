@@ -30,7 +30,7 @@ interface NewCardFormData {
 }
 
 const getUserCardsAPI = (userId: number) => {
-    return axios.delete(`${backendUrl}/usercreditcard/${userId}`)
+    return axios.get(`${backendUrl}/usercreditcard/${userId}`)
         .then(response => response.data)
         .catch(error => console.log(error));
 }
