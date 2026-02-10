@@ -3,7 +3,7 @@ import './Navbar.css';
 import SignUpLoginModal from '../components/SignUpLoginModal';
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../public/image/";
+import logo from "/image/logo.png";
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
