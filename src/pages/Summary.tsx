@@ -118,6 +118,7 @@ const Summary: React.FC = () => {
                     cards={cardsData} 
                     onDelete={handleDeleteCard} 
                     onCardClick={viewCardDetails} 
+                    onAdd={() => setIsModalOpen(true)}
                 />
             </section>
 
