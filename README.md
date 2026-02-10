@@ -1,16 +1,27 @@
-# React + Vite
+# 🚀 Reward Tracker Backend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Description
 
-Currently, two official plugins are available:
+Reward Tracker is a comprehensive web application designed to allow credit card users to take full control of their financial benefits. In an era of complex reward structures, this platform solves the challenge of managing multiple cards by providing a centralized, manual logging system for transactions.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The application serves three primary purposes:
 
-## React Compiler
+Centralized Tracking: Users can manually log transactions to monitor specific category spendings and reward progress across various credit cards.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Benefit Optimization: helping user track annual fees, statement credits, and milestone rewards.
 
-## Expanding the ESLint configuration
+Community Insight: Through an integrated forum, users can exchange tips, share "hidden" card benefits, and discuss financial strategies with a like-minded community.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Dependencies
+
+Core: React 18 (Vite), TypeScript
+State & API: Axios for asynchronous HTTP requests
+Styling: CSS, Bootstrap
+Build Tool: Vite
+Deployment: Vercel
+
+## Setup Instructions
+
+- Node.js
+- BackendUrl: https://reward-tracker-backend.onrender.com
