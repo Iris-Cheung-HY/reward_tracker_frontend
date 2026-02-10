@@ -31,23 +31,24 @@ export default function Navbar() {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
     });
-
     const [showSignUpLoginModal, setSignUpLoginModal] = useState(false);
+
+    const updateSession = (userData: User) => {
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        setSignUpLoginModal(false);
+    };
 
     const handleSignup = async (formData: NewUserFormData) => {
         try {
             const response = await axios.post(`${backendUrl}/users`, formData);
-            const newUser = response.data;
-            setUser(newUser);
-            localStorage.setItem('user', JSON.stringify(newUser));
-            alert('Sign up Success！');
-            setSignUpLoginModal(false);
+            updateSession(response.data);
+            alert('Sign up Success!');
         } catch (error: any) {
-            if (error.response?.status === 409) {
-                alert("Username or Email Exist!");
-            } else {
-                alert("Signup failed, please try again.");
-            }
+            const errorMessage = error.response?.status === 409 
+                ? "Username or Email already exists!" 
+                : "Signup failed, please try again.";
+            alert(errorMessage);
         }
     };
 
@@ -55,16 +56,12 @@ export default function Navbar() {
         try {
             const response = await axios.post(`${backendUrl}/users/login`, formData);
             
-            if (response.data && response.data.username) {
-                const loginUser = response.data;
-                setUser(loginUser);
-                localStorage.setItem('user', JSON.stringify(loginUser));
-                alert(`Welcome Back, ${loginUser.username}!`);
-                setSignUpLoginModal(false);
-
+            if (response.data?.username) {
+                updateSession(response.data);
+                alert(`Welcome Back, ${response.data.username}!`);
                 navigate("/summary");
             } else {
-                alert("Login failed: Invalid username or password");
+                alert("Login failed: Invalid credentials");
             }
         } catch (error: any) {
             alert("Login failed: Wrong credentials or server error");
@@ -78,49 +75,41 @@ export default function Navbar() {
         navigate("/");
     };
 
-
 return (
-        <>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow-sm">
-                <div className="container-fluid">
-                    <span className="navbar-brand mb-0 h1">Reward Tracker</span>
+    <>
+        <nav className="custom-navbar fixed-top">
+            <div className="navbar-container">
+                <Link to="/" className="brand-logo">Reward Tracker</Link>
 
-                    <div className="d-flex align-items-center ms-auto">
-                        {user ? (
-                            <div className="d-flex align-items-center gap-4">
-                                <Link className="nav-link fw-semibold" to="/">Forum</Link>
-                                <Link className="nav-link fw-semibold" to="/summary">My Wallet</Link>
-                                
-                                <div className="d-flex align-items-center ms-2 border-start ps-4">
-                                    <span className="text-secondary me-3">Hi, {user.username}</span>
-                                    <button 
-                                        className="btn btn-sm btn-outline-danger" 
-                                        onClick={handleLogout}
-                                    >
-                                        Logout
-                                    </button>
-                                </div>
+                <div className="nav-actions">
+                    {user ? (
+                        <div className="user-menu">
+                            <Link className="nav-link" to="/">Forum</Link>
+                            <Link className="nav-link" to="/summary">My Wallet</Link>
+                            
+                            <div className="user-profile">
+                                <span className="welcome-text">Hi, {user.username}</span>
+                                <button className="logout-button" onClick={handleLogout}>
+                                    Logout
+                                </button>
                             </div>
-                        ) : (
-                            <button 
-                                className="btn btn-primary px-4"
-                                onClick={() => setSignUpLoginModal(true)}
-                            >
-                                Sign Up / Log In
-                            </button>
-                        )}
-                    </div>
+                        </div>
+                    ) : (
+                        <button className="login-button" onClick={() => setSignUpLoginModal(true)}>
+                            Sign Up / Log In
+                        </button>
+                    )}
                 </div>
-            </nav>
+            </div>
+        </nav>
 
-            {showSignUpLoginModal && (
-                <SignUpLoginModal
-                    onSignupSubmit={handleSignup}
-                    onSigninSubmit={handleSignin}
-                    onClose={() => setSignUpLoginModal(false)}
-                />
-            )}
-        </>
+        {showSignUpLoginModal && (
+            <SignUpLoginModal
+                onSignupSubmit={handleSignup}
+                onSigninSubmit={handleSignin}
+                onClose={() => setSignUpLoginModal(false)}
+            />
+        )}
+    </>
     );
 }
-
