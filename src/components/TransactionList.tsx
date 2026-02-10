@@ -67,7 +67,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd
 
     return (
         <div id="transaction-history-wrapper">
-            <header className="list-header">
+            {/* <header className="list-header">
                 <h3>Transaction History</h3>
                 <button className="add-trans-btn" onClick={onAdd}>
                     + Add Transaction
@@ -81,7 +81,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd
                     <span>Amount</span>
                     <span>Description</span>
                     <span>Action</span>
-                </div>
+                </div> */}
 
                 {transactions.length === 0 && !isLoading ? (
                     <div className="empty-message">No records found.</div>

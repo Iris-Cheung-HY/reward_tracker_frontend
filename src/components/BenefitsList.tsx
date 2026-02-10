@@ -106,7 +106,7 @@ const BenefitsList: React.FC<BenefitsListProps> = ({ userCardId }) => {
         <div className="benefits-section">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 className="fw-bold mb-1">Card Progress</h4>
+                    {/* <h4 className="fw-bold mb-1">Card Progress</h4> */}
                     <p className="text-muted small mb-0">Real-time tracking of your spending goals and credits.</p>
                 </div>
                 <span className="badge rounded-pill bg-primary px-3 py-2">
