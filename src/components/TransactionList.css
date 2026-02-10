@@ -1,0 +1,47 @@
+.transaction-item-row {
+    display: grid;
+    grid-template-columns: 120px 140px 100px 1fr 60px;
+    gap: 15px;
+    padding: 15px;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+}
+
+.transaction-item-row:hover {
+    background-color: #fcfdfe;
+}
+
+.cat-pill {
+    background: #e9ecef;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #495057;
+}
+
+.amount {
+    font-weight: 800;
+    color: #d32f2f;
+}
+
+.merchant-desc {
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delete-mini-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.delete-mini-btn:hover {
+    color: #dc3545;
+}

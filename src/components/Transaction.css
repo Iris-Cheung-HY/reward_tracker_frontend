@@ -1,0 +1,50 @@
+.transaction-item-row {
+    display: grid;
+    grid-template-columns: 120px 140px 100px 1fr 60px; 
+    gap: 15px;
+    padding: 15px;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.transaction-item-row:hover {
+    background-color: #f9fbff;
+    transform: translateX(5px); 
+}
+
+.category-pill {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.amount-col {
+    font-weight: 800;
+    color: #dc3545;
+}
+
+.merchant-col {
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delete-item-x {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.delete-item-x:hover {
+    color: #dc3545;
+}

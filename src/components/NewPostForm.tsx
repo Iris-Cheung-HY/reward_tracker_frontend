@@ -4,6 +4,20 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
+export const uploadImageAPI = (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'reward_tracker');
+    
+    return axios.post(`https://api.cloudinary.com/v1_1/dpfccbrwk/image/upload`, formData)
+        .then(res => res.data.secure_url);
+};
+
+export const createPostAPI = (postData: any) => {
+    return axios.post(`${backendUrl}/posts`, postData)
+        .then(res => res.data);
+};
+
 const kDefaultPostForm = {
     title: '',
     body: '',
@@ -14,130 +28,107 @@ const NewPostForm: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [postFormData, setPostFormData] = useState(kDefaultPostForm);
+    const [form, setForm] = useState({ title: '', body: '', category: 'Travel' });
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [posts, setPosts] = useState([]);
-    
-    const [disableSubmit, setDisableSubmit] = useState(true);
-    const [errMsg, setErrMsg] = useState('Message cannot be empty!');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const cat = params.get('category');
-        if (cat) {
-            setPostFormData(prev => ({ ...prev, category: cat }));
-        }
+        if (cat) setForm(prev => ({ ...prev, category: cat }));
     }, [location.search]);
 
-    const updateFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        
-        const newFormData = {
-            ...postFormData,
-            [name]: value
-        };
-        setPostFormData(newFormData);
-
-        if (newFormData.title.trim().length === 0 || newFormData.body.trim().length === 0) {
-            setDisableSubmit(true);
-            setErrMsg('Title and Content cannot be empty!');
-        } else {
-            setDisableSubmit(false);
-            setErrMsg('');
-        }
+        setForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const isInvalid = form.title.trim() === '' || form.body.trim() === '';
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsUploading(true);
+        setLoading(true);
+        setError('');
 
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-        setPostFormData(kDefaultPostForm);
+        const uploadTask = imageFile ? uploadImageAPI(imageFile) : Promise.resolve("");
 
-        try {
-            let imageUrl = "";
-
-            if (imageFile) {
-                const formData = new FormData();
-                formData.append('file', imageFile);
-                formData.append('upload_preset', 'reward_tracker');
-                
-                const cloudRes = await axios.post(
-                    `https://api.cloudinary.com/v1_1/dpfccbrwk/image/upload`,
-                    formData
-                );
-                imageUrl = cloudRes.data.secure_url;
-            }
-
-            const savedUser = localStorage.getItem('user');
-            const currentUserId = savedUser ? JSON.parse(savedUser).id : null;
-
-            const postData = {
-                ...postFormData,
-                imageUrl: imageUrl,
-                user_id: currentUserId
-            };
-
-            const res = await axios.post(`${backendUrl}/posts`, postData);
-
-            alert("Post Success！");
-
-            const newPost = res.data
-            if (newPost && newPost.id) {
-                navigate(`/posts/${newPost.id}`)
-            } else {
-                navigate('/forum')
-            }
-        } catch (error) {
-            console.error(error);
-            alert("Please try again later!");
-        } finally {
-            setIsUploading(false);
-        }
+        uploadTask
+            .then(imageUrl => {
+                const finalPostData = {
+                    ...form,
+                    imageUrl: imageUrl,
+                    user_id: user.id
+                };
+                return createPostAPI(finalPostData);
+            })
+            .then(newPost => {
+                alert("Post successful!");
+                if (newPost && newPost.id) {
+                    navigate(`/posts/${newPost.id}`);
+                } else {
+                    navigate('/forum');
+                }
+            })
+            .catch(err => {
+                console.error("Post Error:", err);
+                setError("Could not publish post. Please try again.");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     return (
-        <div className="container" style={{ marginTop: '100px', maxWidth: '600px' }}>
-            <h2>New Post in <span className="text-primary">{postFormData.category}</span></h2>
-            
-            <form onSubmit={handleSubmit}>
-                {errMsg && <p style={{ color: 'red', fontSize: '0.8rem' }}>{errMsg}</p>}
+        <div id="new-post-page-wrapper">
+            <div className="post-form-card">
+                <header className="form-header">
+                    <h2>New Post in <span className="cat-label">{form.category}</span></h2>
+                    {error && <p className="error-text">{error}</p>}
+                </header>
 
-                <input 
-                    name="title"
-                    className="form-control mb-3" 
-                    placeholder="Title" 
-                    value={postFormData.title}
-                    onChange={updateFormChange}
-                    required 
-                />
-                
-                <input 
-                    type="file" 
-                    className="form-control mb-3" 
-                    accept="image/*"
-                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-                />
+                <form id="forum-submission-form" onSubmit={handleSubmit}>
+                    <div className="field-group">
+                        <label>Post Title</label>
+                        <input 
+                            name="title" 
+                            type="text"
+                            placeholder="Give your post a title..."
+                            value={form.title}
+                            onChange={handleInputChange}
+                        />
+                    </div>
 
-                <textarea 
-                    name="body"
-                    className="form-control mb-3" 
-                    placeholder="Content" 
-                    value={postFormData.body} 
-                    style={{ height: '200px' }}
-                    onChange={updateFormChange}
-                    required 
-                />              
-                
-                <button 
-                    type="submit" 
-                    className="btn btn-primary w-100" 
-                    disabled={isUploading || disableSubmit}
-                >
-                    {isUploading ? "Uploading..." : "Publish Post"}
-                </button>
-            </form>
+                    <div className="field-group">
+                        <label>Upload Image (Optional)</label>
+                        <input 
+                            type="file" 
+                            accept="image/*"
+                            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                        />
+                    </div>
+
+                    <div className="field-group">
+                        <label>Content</label>
+                        <textarea 
+                            name="body"
+                            placeholder="Share your thoughts or tips..."
+                            value={form.body}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        className="publish-btn"
+                        disabled={loading || isInvalid}
+                    >
+                        {loading ? "Publishing..." : "Publish Post"}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
