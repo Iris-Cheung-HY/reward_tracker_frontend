@@ -19,25 +19,20 @@ interface TransactionListProps {
     onAdd: () => void;
 }
 
-
 const fetchTransactionsAPI = (userId: number, cardId: number) => {
     return axios.get(`${backendUrl}/transactionrecords/user/${userId}/card/${cardId}`)
-        .then(response => {
-            return response.data.content || response.data || [];
-        })
+        .then(response => response.data.content || response.data || [])
         .catch(error => {
             console.log(error);
+            return [];
         });
 };
 
 const deleteTransactionAPI = (id: number) => {
     return axios.delete(`${backendUrl}/transactionrecords/${id}`)
         .then(response => response.data)
-        .catch(error => {
-            console.log(error)
-        })
+        .catch(error => console.log(error));
 };
-
 
 const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd }) => {
     const [transactions, setTransactions] = useState<TransactionItem[]>([]);
@@ -46,7 +41,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd
     const loadTransactions = () => {
         if (!userId || !cardId) return;
         setIsLoading(true);
-        
         fetchTransactionsAPI(userId, cardId).then(data => {
             setTransactions(data);
             setIsLoading(false);
@@ -67,13 +61,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd
 
     return (
         <div id="transaction-history-wrapper">
-            {/* <header className="list-header">
-                <h3>Transaction History</h3>
-                <button className="add-trans-btn" onClick={onAdd}>
-                    + Add Transaction
-                </button>
-            </header>
-
             <div className="transaction-grid-body">
                 <div className="grid-label-row">
                     <span>Date</span>
@@ -81,7 +68,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd
                     <span>Amount</span>
                     <span>Description</span>
                     <span>Action</span>
-                </div> */}
+                </div>
 
                 {transactions.length === 0 && !isLoading ? (
                     <div className="empty-message">No records found.</div>
