@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import "./NewPostForm.css";
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
