@@ -22,16 +22,43 @@ const convertPostFromAPI = (apiData: any): FrontendPost => {
 const fetchPostsAPI = (endpoint: string) => {
   return axios.get(`${backendUrl}${endpoint}`)
     .then(response => {
-      console.log(`--- Debug: Data from ${endpoint} ---`);
-      console.log(response.data);
+      console.log(`>>> [DEBUG] Endpoint: ${endpoint}`);
+      console.log(`>>> [TYPE]:`, typeof response.data);
+      console.log(`>>> [DATA]:`, response.data); 
+
       const postData = response.data;
-      return postData.map(convertPostFromAPI);
+
+      if (postData && Array.isArray(postData)) {
+        return postData.map(convertPostFromAPI);
+      } 
+      
+      if (postData && typeof postData === 'object') {
+        const nestedData = postData.posts || postData.data || [];
+        console.log(`>>> [NESTED DATA FOUND]:`, nestedData);
+        return nestedData.map(convertPostFromAPI);
+      }
+
+      return [];
     })
     .catch(error => {
-      console.log(error);
+      console.log(`>>> [ERROR] ${endpoint}:`, error);
       return [];
     });
 };
+
+// const fetchPostsAPI = (endpoint: string) => {
+//   return axios.get(`${backendUrl}${endpoint}`)
+//     .then(response => {
+//       console.log(`--- Debug: Data from ${endpoint} ---`);
+//       console.log(response.data);
+//       const postData = response.data;
+//       return postData.map(convertPostFromAPI);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//       return [];
+//     });
+// };
 
 const Forum: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<FrontendPost[]>([]);
