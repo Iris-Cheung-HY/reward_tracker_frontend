@@ -6,7 +6,7 @@ import NewCardForm from '../components/NewCardForm';
 import CardList from '../components/CardList';
 import AddCardModal from '../components/AddCardModalSummary.js';
 import { useNavigate } from 'react-router-dom';
-import './Summary.tsx';
+import './Summary.css';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
