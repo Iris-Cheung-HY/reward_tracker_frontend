@@ -143,9 +143,9 @@ const NewTransactionForm: React.FC<NewTransactionFormProps> = ({ onFormSubmit, c
                 </div>
 
                 <div className="form-group mb-4">
-                    <label className="form-label fw-bold text-secondary small text-uppercase">Description</label>
+                    <label className="form-label fw-bold text-secondary small text-uppercase">Merchant Description</label>
                     <input
-                        name="description"
+                        name="MerchantDescription"
                         type="text"
                     placeholder={selectedRule?.conditions ? selectedRule.conditions : "Description"}
                     className="form-control"
