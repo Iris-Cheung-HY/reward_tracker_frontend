@@ -3,8 +3,32 @@ import axios from 'axios';
 import FeaturedPost from '../components/FeaturedPost';
 import PostList from '../components/PostList';
 import type { FrontendPost } from '../types/PostType';
+import './Forum.css';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
+
+const convertPostFromAPI = (apiData: any): FrontendPost => {
+  return {
+    id: apiData.postId,
+    title: apiData.title,
+    body: apiData.body,
+    imageUrl: apiData.imageUrl,
+    category: apiData.category,
+    userId: apiData.user_id,
+    createdAt: apiData.createdAt
+  };
+};
+
+const fetchPostsAPI = (endpoint: string) => {
+  return axios.get(`${backendUrl}${endpoint}`)
+    .then(response => {
+      return response.data.map(convertPostFromAPI);
+    })
+    .catch(error => {
+      console.log(`Error fetching from ${endpoint}:`, error);
+      return [];
+    });
+};
 
 const Forum: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<FrontendPost[]>([]);
@@ -15,66 +39,59 @@ const Forum: React.FC = () => {
   const savedUser = localStorage.getItem('user');
   const isLoggedIn = !!savedUser;
 
-  useEffect(() => {
-    const loadAllData = async () => {
-      setIsLoading(true);
-      const fetchPosts = async (endpoint: string) => {
-        try {
-          const response = await axios.get(`${backendUrl}${endpoint}`);
-          return response.data.content || response.data || [];
-        } catch (error) {
-          console.error(error);
-          return [];
-        }
-      };
-      
-      const [featured, travel, credit] = await Promise.all([
-        fetchPosts('/posts/featured'),
-        fetchPosts('/posts/travel-preview'),
-        fetchPosts('/posts/creditcard-preview')
-      ]);
+useEffect(() => {
+    setIsLoading(true);
 
+    Promise.all([
+        fetchPostsAPI('/posts/featured'),
+        fetchPostsAPI('/posts/travel-preview'),
+        fetchPostsAPI('/posts/creditcard-preview')
+    ])
+    .then(([featured, travel, creditcard]) => {
       setFeaturedPosts(featured);
       setTravelPosts(travel);
-      setCreditCardPosts(credit);
+      setCreditCardPosts(creditcard);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+    .finally(() => {
       setIsLoading(false);
-    };
-    loadAllData();
+    });
   }, []);
 
-  if (isLoading) return <div className="text-center mt-5">Loading posts...</div>;
+  if (isLoading) {
+    return <div className="forum-loading">Loading...</div>;
+  }
 
-    return (
-
-    <div className="container-fluid py-5" style={{ maxWidth: '1400px', marginTop: '80px' }}>
-        
-
-        <section className="mb-5 px-md-3">
-        <h2 className="fw-bold mb-4">Featured Posts</h2>
+  return (
+    <div className="forum-main-container">
+      <section className="featured-section">
+        <h2 className="section-header">Featured Posts</h2>
         <FeaturedPost posts={featuredPosts} />
-        </section>
+      </section>
 
-        <div className="row g-4 px-md-3">
-        <div className="col-lg-6">
-            <PostList 
+      <div className="forum-grid">
+        <div className="grid-column">
+          <PostList 
             title="Travel" 
             posts={travelPosts} 
             categoryKey="Travel" 
             isLoggedIn={isLoggedIn} 
-            />
+          />
         </div>
         
-        <div className="col-lg-6">
-            <PostList 
+        <div className="grid-column">
+          <PostList 
             title="Credit Card" 
             posts={creditCardPosts} 
             categoryKey="Credit Card" 
             isLoggedIn={isLoggedIn} 
-            />
+          />
         </div>
-        </div>
+      </div>
     </div>
-    );
+  );
 }
 
 export default Forum;
