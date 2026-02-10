@@ -22,35 +22,17 @@ const convertPostFromAPI = (apiData: any): FrontendPost => {
 const fetchPostsAPI = (endpoint: string) => {
   return axios.get(`${backendUrl}${endpoint}`)
     .then(response => {
-      console.log(`>>> [DEBUG] Endpoint: ${endpoint}`);
-      
-      const postArray = response.data && response.data.content 
+      const postData = response.data && response.data.content 
         ? response.data.content 
         : [];
-
-      console.log(`>>> [SUCCESS] Found ${postArray.length} posts`);
-
-      return postArray.map(convertPostFromAPI);
+      return postData.map(convertPostFromAPI);
     })
     .catch(error => {
-      console.log(`>>> [ERROR] ${endpoint}:`, error);
+      console.log(error);
       return [];
     });
 };
 
-// const fetchPostsAPI = (endpoint: string) => {
-//   return axios.get(`${backendUrl}${endpoint}`)
-//     .then(response => {
-//       console.log(`--- Debug: Data from ${endpoint} ---`);
-//       console.log(response.data);
-//       const postData = response.data;
-//       return postData.map(convertPostFromAPI);
-//     })
-//     .catch(error => {
-//       console.log(error);
-//       return [];
-//     });
-// };
 
 const Forum: React.FC = () => {
   const [featuredPosts, setFeaturedPosts] = useState<FrontendPost[]>([]);
