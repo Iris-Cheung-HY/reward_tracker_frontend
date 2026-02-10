@@ -62,14 +62,6 @@ const TransactionList: React.FC<TransactionListProps> = ({ userId, cardId, onAdd
     return (
         <div id="transaction-history-wrapper">
             <div className="transaction-grid-body">
-                <div className="grid-label-row">
-                    <span>Date</span>
-                    <span>Category</span>
-                    <span>Amount</span>
-                    <span>Description</span>
-                    <span>Action</span>
-                </div>
-
                 {transactions.length === 0 && !isLoading ? (
                     <div className="empty-message">No records found.</div>
                 ) : (
