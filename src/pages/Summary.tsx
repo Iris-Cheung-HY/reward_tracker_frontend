@@ -100,20 +100,26 @@ const Summary: React.FC = () => {
                 <h1>My Wallet Dashboard</h1>
             </header>
 
-            <div id="summary-stats-grid">
-                <AnnualFeeTotal />
-                <SummaryTransaction />
+            <div id="summary-stats-banner">
+                <div className="stat-item-wrapper left">
+                    <AnnualFeeTotal />
+                </div>
+                <div className="stat-item-wrapper right">
+                    <SummaryTransaction />
+                </div>
             </div>
 
             <section id="my-cards-section">
                 <div id="section-header">
                     <h2>My Credit Cards</h2>
+                    <button className="add-card-btn" onClick={() => setIsModalOpen(true)}>
+                        + New Card
+                    </button>
                 </div>
                 
                 <CardList 
                     cards={cardsData} 
                     onDelete={handleDeleteCard} 
-                    onAdd={() => setIsModalOpen(true)}
                     onCardClick={viewCardDetails} 
                 />
             </section>
