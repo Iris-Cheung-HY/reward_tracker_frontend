@@ -1,4 +1,4 @@
-# 🚀 Reward Tracker Backend
+# 🚀 Reward Tracker Frontend
 
 ## Project Description
 
