@@ -22,10 +22,11 @@ const convertPostFromAPI = (apiData: any): FrontendPost => {
 const fetchPostsAPI = (endpoint: string) => {
   return axios.get(`${backendUrl}${endpoint}`)
     .then(response => {
-      return response.data.map(convertPostFromAPI);
+      const postData = response.data;
+      return postData.map(convertPostFromAPI);
     })
     .catch(error => {
-      console.log(`Error fetching from ${endpoint}:`, error);
+      console.log(error);
       return [];
     });
 };
