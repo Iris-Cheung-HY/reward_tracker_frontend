@@ -9,42 +9,28 @@ interface Props {
 function FeaturedPost({ posts }: Props) {
   const navigate = useNavigate();
 
-
-  if (!posts || posts.length === 0) return null;
-
   return (
     <Carousel 
       fade 
-      className="shadow-lg rounded-4 overflow-hidden mb-5"
-
-      interval={5000} 
+      className="custom-featured-carousel" 
+      interval={5000}
+      indicators={true}
     >
       {posts.slice(0, 3).map((post) => (
         <Carousel.Item 
-          key={post.postId || post.id} 
-          onClick={() => navigate(`/posts/${post.postId || post.id}`)}
-          style={{ cursor: 'pointer', height: '450px' }}
+          key={post.id} 
+          onClick={() => navigate(`/posts/${post.id}`)}
+          className="carousel-item-wrapper"
         >
           <img
-            className="d-block w-100 h-100"
-            src={post.postImage || post.imageUrl}
+            className="d-block w-100 featured-image"
+            src={post.imageUrl}
             alt={post.title}
-            style={{ objectFit: 'cover' }} 
           />
-          
-          <Carousel.Caption 
-            className="text-start px-4"
-            style={{ 
-              background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              paddingBottom: '2rem'
-            }}
-          >
-            <h2 className="fw-bold text-white">{post.title}</h2>
-            <p className="text-light d-none d-md-block">
-              {post.content ? `${post.content.substring(0, 120)}...` : "Click to read more"}
+          <Carousel.Caption className="featured-content-overlay">
+            <h2 className="featured-title">{post.title}</h2>
+            <p className="featured-description d-none d-md-block">
+              {post.body.substring(0, 100)}...
             </p>
           </Carousel.Caption>
         </Carousel.Item>

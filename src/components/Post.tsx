@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './Post.css';
 
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
@@ -11,52 +12,74 @@ export interface PostDetails {
     body: string;
     imageUrl: string; 
     category: string;
-    authorName?: string; 
+    userId?: string; 
 }
+
+const fetchSinglePostAPI = (id: string) => {
+  return axios.get(`${backendUrl}/posts/${id}`)
+    .then(response => {
+      return response.data; 
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+const emptyPost: PostDetails = {
+    id: 0,
+    title: '',
+    body: '',
+    imageUrl: '',
+    category: '',
+    userId: ''
+};
 
 const PostDetail: React.FC = () => {
     const { id } = useParams();
-    const [post, setPost] = useState<PostDetails | null>(null);
+    const navigate = useNavigate();
+    const [post, setPost] = useState<PostDetails>(emptyPost);
 
     useEffect(() => {
-        axios.get(`${backendUrl}/posts/${id}`)
-            .then(res => setPost(res.data))
-            .catch(err => console.error("Fetch post error:", err));
+        if (!id) return;
+
+        fetchSinglePostAPI(id).then(data => {
+            if (data) {
+                setPost(data);
+            } else {
+                navigate('/');
+            }
+        });
     }, [id]);
 
-    if (!post) return <div className="text-center" style={{marginTop: '100px'}}>Loading...</div>;
+    if (!post) return <div id="loading-spinner">Loading...</div>;
 
     return (
-        <div className="container" style={{ marginTop: '100px', maxWidth: '800px' }}>
-            <h1 className="fw-bold">{post.title}</h1>
-            <div className="d-flex gap-2 mb-4">
-                <span className="badge bg-info">{post.category}</span>
-                <small className="text-muted">Posted by {post.authorName || 'Anonymous'}</small>
+        <main id="post-detail-layout">
+        <header className="post-header-section">
+            <h1 className="main-title">{post.title}</h1>
+            <div className="post-info-line">
+            <span className="cat-badge">{post.category}</span>
+            <span className="user-id-text">User ID: {post.userId}</span>
             </div>
+        </header>
 
-            {post.imageUrl && (
-                <div className="text-center mb-4">
-                    <img 
-                        src={post.imageUrl} 
-                        alt={post.title} 
-                        className="img-fluid rounded shadow"
-                        style={{ maxHeight: '500px', width: '100%', objectFit: 'cover' }}
-                    />
-                </div>
-            )}
-
-            <div 
-                className="post-body p-3 bg-white rounded border"
-                style={{ whiteSpace: 'pre-wrap', lineHeight: '1.8', fontSize: '1.1rem' }}
-            >
-                {post.body}
+        {post.imageUrl && (
+            <div className="featured-image-box">
+            <img src={post.imageUrl} alt={post.title} />
             </div>
-            
-            <button className="btn btn-outline-secondary mt-5" onClick={() => window.history.back()}>
-                ← Back to Forum
+        )}
+
+        <article id="post-text-content">
+            {post.body}
+        </article>
+
+        <div className="action-area">
+            <button className="back-link-btn" onClick={() => navigate(-1)}>
+            ← Back to Forum
             </button>
         </div>
+        </main>
     );
-};
+    };
 
 export default PostDetail;
