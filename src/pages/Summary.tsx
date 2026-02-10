@@ -112,9 +112,6 @@ const Summary: React.FC = () => {
             <section id="my-cards-section">
                 <div id="section-header">
                     <h2>My Credit Cards</h2>
-                    <button className="add-card-btn" onClick={() => setIsModalOpen(true)}>
-                        + New Card
-                    </button>
                 </div>
                 
                 <CardList 
