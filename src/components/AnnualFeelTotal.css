@@ -1,0 +1,27 @@
+.ann-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #dc3545; 
+}
+
+.tra-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid lightblue; 
+}
+
+.ann-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.ann-value {
+    font-size: 2rem;
+    font-weight: 800;
+}

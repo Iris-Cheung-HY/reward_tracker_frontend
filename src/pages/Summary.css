@@ -1,0 +1,54 @@
+#summary-page-container {
+    max-width: 1000px;
+    margin: 3rem auto;
+    padding: 0 20px;
+}
+
+#summary-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+#summary-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+}
+
+#summary-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 25px;
+    margin-bottom: 4rem;
+}
+
+#my-cards-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #eee;
+}
+
+#section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f6f8fa;
+}
+
+#section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+#loader {
+    text-align: center;
+    padding: 100px 0;
+    font-size: 1.2rem;
+    color: #666;
+    font-weight: 500;
+}

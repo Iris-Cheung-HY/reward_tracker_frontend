@@ -6,6 +6,7 @@ import NewCardForm from '../components/NewCardForm';
 import CardList from '../components/CardList';
 import AddCardModal from '../components/AddCardModalSummary.js';
 import { useNavigate } from 'react-router-dom';
+import './Summary.tsx';
 
 const backendUrl = import.meta.env.VITE_APP_BACKEND_URL;
 
@@ -28,99 +29,96 @@ interface NewCardFormData {
     openMonth: string;
 }
 
+const getUserCardsAPI = (userId: number) => {
+    return axios.delete(`${backendUrl}/usercreditcard/${userId}`)
+        .then(response => response.data)
+        .catch(error => console.log(error));
+}
+
+const deleteCardAPI = (id: number) => {
+    return axios.delete(`${backendUrl}/usercreditcard/${id}`)
+    .then(response => response.data)
+    .catch(error => console.log(error));
+};
+
 const Summary: React.FC = () => {
-    const [cards, setCards] = useState<UserCard[]>([]);
+    const [cardsData, setCardsData] = useState<UserCard[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
-    const fetchUserCards = async () => {
-        try {
-            const storedUser = localStorage.getItem('user');
-            if (!storedUser) return;
-            const user = JSON.parse(storedUser);
+    const viewCardDetails = (id: number) => {
+    navigate(`/card/${id}`);
+    };
 
-            const res = await axios.get(`${backendUrl}/usercreditcard/user/${user.id}`);
-            setCards(res.data);
-        } catch (error) {
-            console.error("Error fetching cards:", error);
-        } finally {
+    const loadDashboard = () => {
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) return;
+        const user = JSON.parse(storedUser);
+
+        setIsLoading(true);
+        getUserCardsAPI(user.id).then(data => {
+            setCardsData(data || []);
             setIsLoading(false);
-        }
+        });
     };
-
-    const handleDeleteCard = async (id: number) => {
-            try {
-                await axios.delete(`${backendUrl}/usercreditcard/${id}`);
-                fetchUserCards();
-                alert("Card deleted successfully!");
-            } catch (error) {
-                console.error("Delete failed:", error);
-            }
-    };
-
-    const handleAddCard = async (formData: NewCardFormData) => {
-        try {
-            const storedUser = localStorage.getItem('user');
-            if (!storedUser) return;
-            const user = JSON.parse(storedUser);
-
-            console.log(formData);
-
-            await axios.post(`${backendUrl}/usercreditcard/user/${user.id}`, formData);
-            alert("Card added successfully!");
-            setIsModalOpen(false);
-            fetchUserCards();
-        } catch (error) {
-            console.error("Failed to add card:", error);
-            alert("Failed to add card. Please try again.");
-        }
-    };
-
 
     useEffect(() => {
-        fetchUserCards();
+        loadDashboard();
     }, []);
 
-    const handleCardClick = (cardId: number) => {
-        navigate(`/card/${cardId}`);
-    }
+    const handleDeleteCard = (id: number) => {
+        deleteCardAPI(id).then(() => {
+            loadDashboard(); 
+            alert("Card deleted successfully!");
+        });
+    };
+
+    const handleAddCard = (formData: NewCardFormData) => {
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) return;
+        const user = JSON.parse(storedUser);
+
+        axios.post(`${backendUrl}/usercreditcard/user/${user.id}`, formData)
+            .then(() => {
+                setIsModalOpen(false);
+                loadDashboard();
+                alert("Card added!");
+            })
+            .catch(err => console.log(err));
+    };
 
     return (
-        <div className="container py-5">
-            <header className="mb-5 text-center">
-                <h1 className="fw-bold display-5">My Wallet Dashboard</h1>
+        <div id="summary-page-container">
+            <header id="summary-header">
+                <h1>My Wallet Dashboard</h1>
             </header>
 
-            <div className="row g-4 mb-5">
-                <div className="col-md-6">
-                    <AnnualFeeTotal />
-                </div>
-                <div className="col-md-6">
-                    <SummaryTransaction />
-                </div>
+            <div id="summary-stats-grid">
+                <AnnualFeeTotal />
+                <SummaryTransaction />
             </div>
 
-            <section className="cards-section">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h2 className="fw-bold">My Credit Cards</h2>
+            <section id="my-cards-section">
+                <div id="section-header">
+                    <h2>My Credit Cards</h2>
                 </div>
+                
                 <CardList 
-                    cards={cards} 
+                    cards={cardsData} 
                     onDelete={handleDeleteCard} 
                     onAdd={() => setIsModalOpen(true)}
-                    onCardClick={handleCardClick} 
+                    onCardClick={viewCardDetails} 
                 />
             </section>
 
-                {isModalOpen && (
-                    <AddCardModal
-                        onAddCardSubmit={handleAddCard}
-                        onClose={() => setIsModalOpen(false)}
-                    />
-                )}
-            </div>
+            {isModalOpen && (
+                <AddCardModal
+                    onAddCardSubmit={handleAddCard}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
+        </div>
     );
-
 };
 export default Summary;
