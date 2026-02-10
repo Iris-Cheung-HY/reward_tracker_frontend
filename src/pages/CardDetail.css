@@ -1,0 +1,117 @@
+#card-detail-page-wrapper {
+    max-width: 1200px;
+    margin: 6rem auto;
+    padding: 0 30px;
+}
+
+#card-detail-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr; 
+    gap: 60px;
+    align-items: start;
+}
+
+.sidebar-content-sticky {
+    position: sticky;
+    top: 100px;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+}
+
+.sidebar-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.status-badge {
+    background: #e7f3ff;
+    color: #007bff;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.main-card-visual {
+    margin: 30px 0;
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.12));
+    transition: transform 0.3s ease;
+}
+
+.main-card-visual:hover {
+    transform: scale(1.02);
+}
+
+.sidebar-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.detail-stat-box {
+    background: #ffffff;
+    padding: 18px;
+    border: 1px solid #f0f0f0;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.detail-stat-box label {
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: #999;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.detail-stat-box p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.detail-content-block {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid #f3f3f3;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    margin-bottom: 40px;
+}
+
+.block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f9f9f9;
+}
+
+.block-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.btn-add-action {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-action:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
