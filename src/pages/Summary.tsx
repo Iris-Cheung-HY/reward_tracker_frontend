@@ -119,7 +119,6 @@ const Summary: React.FC = () => {
                     onDelete={handleDeleteCard} 
                     onCardClick={viewCardDetails} 
                     onAdd={() => {
-                        console.log("Summary: Setting Modal to True");
                         setIsModalOpen(true)}}
 
                 />
